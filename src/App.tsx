@@ -1,33 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Grid, GridItem, Button, ButtonGroup } from '@chakra-ui/react'
 import './App.css'
+import NotApplied from './Components/NotApplied'
+import Inprogress from './Components/Inprogress'
+import Done from './Components/Done'
+import Reminder from './Components/Reminder'
+import Navbar from './Components/Navbar'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Grid
+        templateAreas={`"tabs tabs tabs"
+                        "reminders reminders reminders"
+                        "notapplied inprogress done"`}
+        gridTemplateRows={'50px 1fr 4fr'}
+        gridTemplateColumns={'1fr 1fr 1fr'}
+        h='100vh'
+        gap='3'
+        color='blackAlpha.700'
+        fontWeight='bold'
+        p='2'
+      >
+        <GridItem area={'tabs'} display="flex" justifyContent={"space-between"}>
+        <ButtonGroup variant='outline' spacing='6' m={2}>
+            <Button>Logo</Button>
+            <Button colorScheme='blue' variant='outline'>Study Tab</Button>
+        </ButtonGroup>
+          <Navbar/>
+        </GridItem>
+        <GridItem area={'reminders'}>
+          <Reminder/>
+        </GridItem>
+        <GridItem area={'notapplied'}>
+          <NotApplied/>
+        </GridItem>
+        <GridItem area={'inprogress'}>
+          <Inprogress/>
+        </GridItem>
+        <GridItem area={'done'}>
+          <Done/>
+        </GridItem>
+      </Grid>
     </>
   )
 }
