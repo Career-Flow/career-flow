@@ -1,0 +1,14 @@
+.jobFooterContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* .jobMenu {
+  align-self: flex-end;
+} */
+
+.displayDate {
+  color: #a6a6a6;
+  font-weight: 400;
+  font-size: 0.85rem;
+}
