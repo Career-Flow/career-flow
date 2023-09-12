@@ -1,0 +1,27 @@
+CREATE TABLE users (
+  _id SERIAL PRIMARY KEY,
+  name VARCHAR(80) NOT NULL CHECK (name <> ''),
+  email VARCHAR(80) UNIQUE NOT NULL CHECK (email <> ''),
+  password VARCHAR(80)
+);
+
+CREATE TABLE applications (
+ _id SERIAL PRIMARY KEY,
+ user_id INTEGER references users (_id),
+ company_name VARCHAR(80) NOT NULL,
+ position VARCHAR(80),
+ listing_link VARCHAR(65535),
+ notes VARCHAR(65535),
+ applied_date DATETIME,
+ last_updated DATETIME DEFAULT NOW(),
+ status_id INTEGER NOT NULL references status (_id),
+);
+
+CREATE TABLE status (
+  _id SERIAL PRIMARY KEY,
+  name VARCHAR(80) UNIQUE NOT NULL CHECK (name <> '')
+);
+
+INSERT INTO status
+  (name) VALUES
+  ('Not Applied'), ('Applied'), ('Interviewing'), ('Waiting'), ('Rejected'), ('Accepted'), ('Ghosted');
