@@ -1,4 +1,4 @@
-import { Grid, GridItem, Button, ButtonGroup } from '@chakra-ui/react'
+import { Grid, GridItem } from '@chakra-ui/react'
 import './App.css'
 import NotApplied from './Components/NotApplied'
 import Inprogress from './Components/Inprogress'
@@ -22,10 +22,12 @@ function App() {
         p='2'
       >
         <GridItem area={'tabs'} display="flex" justifyContent={"space-between"}>
-        <ButtonGroup variant='outline' spacing='6' m={2}>
-            <Button>Logo</Button>
+        {/* <ButtonGroup spacing='6' m={2}>
+            <Button style={{ width: '10vh' }} variant='unstyled'>
+              <img src={Logo} alt="Logo" width='100vh'/>
+            </Button>
             <Button colorScheme='blue' variant='outline'>Study Tab</Button>
-        </ButtonGroup>
+        </ButtonGroup> */}
           <Navbar/>
         </GridItem>
         <GridItem area={'reminders'}>
