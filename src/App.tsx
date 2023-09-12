@@ -1,33 +1,38 @@
-import { useState } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react'
 import './App.css'
-
+import NotApplied from './Components/NotApplied'
+import Inprogress from './Components/Inprogress'
+import Done from './Components/Done'
 
 function App() {
   return (
     <>
       <Grid
-        templateAreas={`"header header"
-                        "nav main"
-                        "nav footer"`}
-        gridTemplateRows={'50px 1fr 30px'}
-        gridTemplateColumns={'150px 1fr'}
-        h='200px'
-        gap='1'
+        templateAreas={`"tabs tabs tabs"
+                        "reminders reminders reminders"
+                        "notapplied inprogress done"`}
+        gridTemplateRows={'50px 10vh 1fr'}
+        gridTemplateColumns={'1fr 1fr 1fr'}
+        h='100vh'
+        gap='3'
         color='blackAlpha.700'
         fontWeight='bold'
+        p='2'
       >
-        <GridItem pl='2' bg='orange.300' area={'header'}>
-          Header
+        <GridItem pl='2' bg='orange.300' area={'tabs'}>
+          Tabs
         </GridItem>
-        <GridItem pl='2' bg='pink.300' area={'nav'}>
-          Nav
+        <GridItem pl='2' bg='orange.300' area={'reminders'}>
+          Reminders
         </GridItem>
-        <GridItem pl='2' bg='green.300' area={'main'}>
-          Main
+        <GridItem area={'notapplied'}>
+          <NotApplied/>
         </GridItem>
-        <GridItem pl='2' bg='blue.300' area={'footer'}>
-          Footer
+        <GridItem area={'inprogress'}>
+          <Inprogress/>
+        </GridItem>
+        <GridItem area={'done'}>
+          <Done/>
         </GridItem>
       </Grid>
     </>
