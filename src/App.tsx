@@ -1,8 +1,10 @@
-import { Grid, GridItem } from '@chakra-ui/react'
+import { Grid, GridItem, Button, ButtonGroup } from '@chakra-ui/react'
 import './App.css'
 import NotApplied from './Components/NotApplied'
 import Inprogress from './Components/Inprogress'
 import Done from './Components/Done'
+import Reminder from './Components/Reminder'
+import Navbar from './Components/Navbar'
 
 function App() {
   return (
@@ -11,7 +13,7 @@ function App() {
         templateAreas={`"tabs tabs tabs"
                         "reminders reminders reminders"
                         "notapplied inprogress done"`}
-        gridTemplateRows={'50px 10vh 1fr'}
+        gridTemplateRows={'50px 1fr 4fr'}
         gridTemplateColumns={'1fr 1fr 1fr'}
         h='100vh'
         gap='3'
@@ -19,11 +21,15 @@ function App() {
         fontWeight='bold'
         p='2'
       >
-        <GridItem pl='2' bg='orange.300' area={'tabs'}>
-          Tabs
+        <GridItem area={'tabs'} display="flex" justifyContent={"space-between"}>
+        <ButtonGroup variant='outline' spacing='6' m={2}>
+            <Button>Logo</Button>
+            <Button colorScheme='blue' variant='outline'>Study Tab</Button>
+        </ButtonGroup>
+          <Navbar/>
         </GridItem>
-        <GridItem pl='2' bg='orange.300' area={'reminders'}>
-          Reminders
+        <GridItem area={'reminders'}>
+          <Reminder/>
         </GridItem>
         <GridItem area={'notapplied'}>
           <NotApplied/>
