@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Button, Container } from "@chakra-ui/react";
+import { Box, Text, Button, Container, Spacer } from "@chakra-ui/react";
 import JobContainer from "./JobContainer";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
@@ -40,7 +40,9 @@ const NotApplied = () => {
         display="flex"
         flexDir="column"
       >
-        <Text textAlign="center">Not Applied</Text>
+        <Text fontWeight="700" color="#9C4221" textAlign="center">
+          👋 Not Applied
+        </Text>
         <Droppable droppableId="notapplied">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
