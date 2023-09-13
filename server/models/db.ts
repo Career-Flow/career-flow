@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-const PG_URI = ':)'
+const PG_URI = 'postgres://kgcavihy:ZstwNDStK7b3hRtSapI0VCbvdXkZP0eF@bubble.db.elephantsql.com/kgcavihy'
 
 const db = new Pool({
   connectionString: PG_URI,

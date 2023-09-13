@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import userRouter from "./routes/userRouter";
 import applicationRouter from "./routes/applicationRouter"
+
 export const app = express();
 
 app.use(express.json());
@@ -10,6 +11,7 @@ app.get('/api/test', (_, res: Response) => res.json({ greeting: 'janica is the w
 //app.use('/reminder', reminderRouter);
 app.use('/user', userRouter);
 app.use('/application', applicationRouter);
+
 
 app.use((req: Request, res: Response) =>
   res.status(404).send("Page not found...")
@@ -34,3 +36,4 @@ if (!process.env['VITE']) {
   });
   app.listen(process.env['PORT']);
 }
+

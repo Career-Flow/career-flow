@@ -24,10 +24,10 @@ const Navbar = () => {
         m={2}
       />
       <MenuList>
-        <MenuItem icon={<InfoIcon />} command='⌘N'>
+        <MenuItem icon={<InfoIcon />} command='⌘P'>
           Profile
         </MenuItem>
-        <MenuItem icon={<BellIcon />} command='⌘T'>
+        <MenuItem icon={<BellIcon />} command='⌘L'>
           Login
         </MenuItem>
       </MenuList>

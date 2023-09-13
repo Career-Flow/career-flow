@@ -4,6 +4,7 @@ import express from 'express';
 
 const applicationRouter = express.Router()
 
+
 // applicationRouter.post('/', applicationController.createApplication (req, res) => {
 //     return res.status(201).json(res.locals.applications);
 //   })
