@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Container, Text} from "@chakra-ui/react";
-import {Droppable, Draggable} from '@hello-pangea/dnd'
+import { Box, Container, Text } from "@chakra-ui/react";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 import JobContainer from "./JobContainer";
 
 const Done = () => {
@@ -17,35 +17,34 @@ const Done = () => {
         borderColor="#c0b0a9"
         p="2"
       >
-        <Text textAlign="center">Done</Text>
-          <Droppable droppableId="Result">
-            {(provided) => (
-              <Box h="70%">
-                Result 
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <JobContainer/>
+        <Text fontWeight="700" color="#9C4221" textAlign="center">
+          👏 Done
+        </Text>
+        <Droppable droppableId="Result">
+          {(provided) => (
+            <Box h="70%">
+              Result
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                <JobContainer />
                 {provided.placeholder}
-                </div>
-              </Box>
-            )}
-          </Droppable>
-          <Droppable droppableId="Ghosted">
-            {(provided) => (
-              <Box h="25%">👻 Ghosted
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <JobContainer/>
+              </div>
+            </Box>
+          )}
+        </Droppable>
+        <Droppable droppableId="Ghosted">
+          {(provided) => (
+            <Box h="25%">
+              👻 Ghosted
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                <JobContainer />
                 {provided.placeholder}
-                </div>
-              </Box>
-            )}
-          </Droppable>
+              </div>
+            </Box>
+          )}
+        </Droppable>
 
-              {/* <Box h="70%">Result </Box>
+        {/* <Box h="70%">Result </Box>
               <Box h="25%">👻 Ghosted</Box> */}
-
- 
-
-
       </Box>
     </>
   );
@@ -53,7 +52,8 @@ const Done = () => {
 
 export default Done;
 
-{/* <Box
+{
+  /* <Box
 w="100%"
 h="100%"
 bg="#ededed"
@@ -75,4 +75,5 @@ p="2"
 
 
 
-</Box> */}
+</Box> */
+}

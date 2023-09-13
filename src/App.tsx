@@ -29,10 +29,10 @@ function App() {
     //reset state
   };
 
-  const loggedIn = window.localStorage.getItem('ssid');
-  console.log(loggedIn)
+  const loggedIn = window.localStorage.getItem("ssid");
+  console.log(loggedIn);
 
-  if (loggedIn=='guest') {
+  if (loggedIn == "guest") {
     // Redirect to the login page or show an access denied message
     return <Navigate to="/login" replace />;
   }
@@ -44,11 +44,10 @@ function App() {
           "reminders reminders reminders"
           "notapplied inprogress done"`}
         gridTemplateRows={"0.1fr 0.5fr 3fr"}
-        gridTemplateColumns={"1fr 2fr 1fr"}
-        gap="3"
+        gridTemplateColumns={"1fr 1.5fr 1fr"}
+        gap="2"
         color="blackAlpha.700"
         fontWeight="bold"
-        // backgroundColor="#ADD8E6"
         p="5"
         h="100vh"
       >
@@ -59,7 +58,7 @@ function App() {
               </Button>
               <Button colorScheme='blue' variant='outline'>Study Tab</Button>
             </ButtonGroup> */}
-          <img src={careerflowLogo} alt="logo" width="100vh" />
+          <img src={careerflowLogo} alt="logo" width="120vh" />
           {/* <img src={Logo} alt="Logo" width="100vh" /> */}
           <Navbar />
         </GridItem>
