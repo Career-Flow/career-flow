@@ -1,14 +1,13 @@
-import React from 'react'
-import { Box } from '@chakra-ui/react'
+import React, { useEffect } from "react";
+import { Checkbox, Box } from "@chakra-ui/react";
 
 const Reminder = () => {
+  //props passed down will have
   return (
-    <>
-      <Box width="100%" height="100%" bg="#ffc5a9" color="black" borderRadius="md" boxShadow='md' borderWidth="1px" borderColor="#c0b0a9" p="2">
-        Reminder
-      </Box>
-    </>
-  )
-}
+    <Box p="2" bg="#ffffff" borderRadius="md" size="md" boxShadow="sm">
+      <Checkbox colorScheme="orange">Overvue: Interview @ 10 AM</Checkbox>
+    </Box>
+  );
+};
 
-export default Reminder
+export default Reminder;
