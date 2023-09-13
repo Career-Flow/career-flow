@@ -1,7 +1,9 @@
 import { Pool } from 'pg';
 
+const PG_URI = ':)'
+
 const db = new Pool({
-  connectionString: process.env.PG_URI,
+  connectionString: PG_URI,
 });
 
 db.on('connect', () => {
@@ -12,4 +14,4 @@ db.on('error', (err) => {
   console.error('Error connecting to the database:', err);
 });
 
-module.exports = { db };
+export default db;

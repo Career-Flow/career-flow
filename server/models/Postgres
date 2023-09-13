@@ -12,14 +12,22 @@ CREATE TABLE applications (
  position VARCHAR(80),
  listing_link VARCHAR(65535),
  notes VARCHAR(65535),
- applied_date DATETIME,
- last_updated DATETIME DEFAULT NOW(),
- status_id INTEGER NOT NULL references status (_id),
+ applied_date TIMESTAMPTZ,
+ last_updated TIMESTAMPTZ DEFAULT NOW(),
+ status_id INTEGER NOT NULL references status (_id)
 );
 
 CREATE TABLE status (
   _id SERIAL PRIMARY KEY,
   name VARCHAR(80) UNIQUE NOT NULL CHECK (name <> '')
+);
+
+CREATE TABLE reminders (
+  _id SERIAL PRIMARY KEY,
+  user_id INTEGER references users (_id),
+  application_id INTEGER references applications (_id),
+  reminderDate TIMESTAMPTZ NOT NULL,
+  reminderType VARCHAR(255) NOT NULL CHECK (reminderType <> '')
 );
 
 INSERT INTO status
