@@ -18,24 +18,27 @@ const Done = () => {
         p="2"
       >
         <Text textAlign="center">Done</Text>
-      <Droppable droppableId="done">
-        {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}>
-                      <Draggable draggableId={"column55"} index={555}>
-                {(provided) => (
-                  <><Box borderColor="#c0b0a9" borderWidth='10px' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-
-                    <div>
-                    TEST DONE EELMENT
-
-                    </div>
-                  </Box></>
-                )}
-              </Draggable>
-                    {provided.placeholder}
-                  </div>
-        )}
-      </Droppable>
+          <Droppable droppableId="Result">
+            {(provided) => (
+              <Box h="70%">
+                Result 
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <JobContainer/>
+                {provided.placeholder}
+                </div>
+              </Box>
+            )}
+          </Droppable>
+          <Droppable droppableId="Ghosted">
+            {(provided) => (
+              <Box h="25%">👻 Ghosted
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <JobContainer/>
+                {provided.placeholder}
+                </div>
+              </Box>
+            )}
+          </Droppable>
 
               {/* <Box h="70%">Result </Box>
               <Box h="25%">👻 Ghosted</Box> */}

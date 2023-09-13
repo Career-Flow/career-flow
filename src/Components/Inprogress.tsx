@@ -1,6 +1,6 @@
 import { Box, Text} from '@chakra-ui/react'
 import JobContainer from './JobContainer'
-import {Droppable, Draggable} from '@hello-pangea/dnd'
+import {Droppable} from '@hello-pangea/dnd'
 
 const Inprogress = () => {
   return (
@@ -10,12 +10,7 @@ const Inprogress = () => {
       <Droppable droppableId="inprogress">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              <Draggable draggableId={"column55notapplied"} index={555666}>
-                {(provided) => (
-
-                  <JobContainer ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}/>
-                )}
-                </Draggable>
+              <JobContainer/>
               {provided.placeholder}
             </div>
           )}

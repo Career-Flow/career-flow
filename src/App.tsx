@@ -6,13 +6,21 @@ import Done from './Components/Done'
 import Reminder from './Components/Reminder'
 import Navbar from './Components/Navbar'
 import Logo from './assets/careerflow.png'
-import {DragDropContext} from '@hello-pangea/dnd'
+import {DragDropContext, OnDragEndResponder} from '@hello-pangea/dnd'
+import { useState } from "react";
 
 function App() {
-  
-  const onDragEnd = (result) =>{
-    console.log(result)
-    return;
+  const [apps, setApps] = useState([]);//Use this for the state of the app
+  const onDragEnd:OnDragEndResponder = (result) =>{
+    const {destination, source, draggableId} = result;
+    console.log('dest', destination)
+    console.log('source', source)
+    console.log('draggableId', draggableId)
+    //if dragged outside of the droppable areas or if dragged back to the same spot, just return
+    if(!destination || (destination.droppableId === source.droppableId && destination.index === source.index)){
+      return;
+    }
+    //reset state
   }
 
   return (
@@ -43,7 +51,7 @@ function App() {
           <GridItem area={'reminders'}>
             <Reminder/>
           </GridItem>
-          <DragDropContext onDragEnd={()=>console.log('test')}>
+          <DragDropContext onDragEnd={onDragEnd}>
             <GridItem area={'notapplied'} maxW={'30vw'}>
               <NotApplied/>
             </GridItem>
