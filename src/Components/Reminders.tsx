@@ -29,7 +29,7 @@ const Reminders = () => {
         borderRadius="md"
         boxShadow="md"
         borderWidth="1px"
-        borderColor="#c0b0a9"
+        borderColor="#E8AA42"
         p="2"
       >
         <h1>Reminders</h1>

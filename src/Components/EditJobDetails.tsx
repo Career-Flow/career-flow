@@ -192,8 +192,9 @@ const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             </Box>
             <Button
               onClick={handleSave}
-              backgroundColor="#cf9c82"
-              variant="ghost"
+              colorScheme="orange"
+              // backgroundColor="#cf9c82"
+              // variant="ghost"
             >
               Save
             </Button>
