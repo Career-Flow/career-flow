@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import db from '../models/db';
+import db from '../models/db.ts';
 
 const userController = {
   createUser: async function (req: Request, res: Response, next: NextFunction) {

@@ -8,7 +8,7 @@ import Navbar from './Components/Navbar'
 import Logo from './assets/careerflow.png'
 import {DragDropContext, OnDragEndResponder} from '@hello-pangea/dnd'
 import { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom"
+import {useNavigate, Navigate} from "react-router-dom"
 
 function App() {
   const [apps, setApps] = useState([]);//Use this for the state of the app
@@ -23,6 +23,14 @@ function App() {
       return;
     }
     //reset state
+  }
+
+  const loggedIn = window.localStorage.getItem('ssid');
+  console.log(loggedIn)
+
+  if (loggedIn=='guest') {
+    // Redirect to the login page or show an access denied message
+    return <Navigate to="/login" replace />;
   }
 
   return (

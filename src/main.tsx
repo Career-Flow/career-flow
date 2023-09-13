@@ -17,9 +17,6 @@ const colors = {
 
 const theme = extendTheme({ colors })
 
-const loggedIn = window.localStorage.getItem('ssid');
-
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   
   <React.StrictMode>
@@ -27,7 +24,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login/>} />
-          <Route path="/" element={loggedIn ?<App /> : <Navigate to="/login" replace />} />
+          <Route path="/" element={<App/>} />
+          <Route path="*" element={<Login/>} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
