@@ -10,10 +10,19 @@ import {
   MenuDivider,
   IconButton
 } from '@chakra-ui/react'
+import { useNavigate} from "react-router-dom";
 
 import { HamburgerIcon, BellIcon, InfoIcon} from '@chakra-ui/icons'
 
+
+
 const Navbar = () => {
+  
+  const navigate = useNavigate();
+  const handleLoginOut = () => {
+
+    navigate('/login');
+  }
   return (
     <Menu>
       <MenuButton
@@ -27,7 +36,7 @@ const Navbar = () => {
         <MenuItem icon={<InfoIcon />} command='⌘P'>
           Profile
         </MenuItem>
-        <MenuItem icon={<BellIcon />} command='⌘L'>
+        <MenuItem icon={<BellIcon />} command='⌘L' onClick={handleLoginOut}>
           Login
         </MenuItem>
       </MenuList>

@@ -28,6 +28,14 @@ function App() {
     //reset state
   };
 
+  const loggedIn = window.localStorage.getItem('ssid');
+  console.log(loggedIn)
+
+  if (loggedIn=='guest') {
+    // Redirect to the login page or show an access denied message
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <>
       <Grid
