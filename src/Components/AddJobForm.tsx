@@ -20,11 +20,10 @@ import {
 
 const AddJobForm = ({ isOpen, onClose }) => {
   const [jobData, setJobData] = useState({
-    name: '',
+    company_name: '',
     position: '',
-    linkToJob: '',
+    listing_link: '',
     notes: '',
-    status:'',
   })
 
   //didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
@@ -59,11 +58,11 @@ const AddJobForm = ({ isOpen, onClose }) => {
             <Box className="addJobContent">
               <FormControl>
                 <FormLabel>Company Name</FormLabel>
-                <Input name="name" value={jobData.name} onChange={handleChange} type="text" />
+                <Input name="company_name" value={jobData.company_name} onChange={handleChange} type="text" />
                 <FormLabel>Position</FormLabel>
                 <Input name="position" value={jobData.position} onChange={handleChange} type="text" />
                 <FormLabel>Link to Job Posting</FormLabel>
-                <Input name="linkToJob" value={jobData.linkToJob} onChange={handleChange} type="url" />
+                <Input name="listing_link" value={jobData.listing_link} onChange={handleChange} type="url" />
                 <FormLabel>Notes</FormLabel>
                 <Textarea name="notes"
                   placeholder='Enter job-related notes'

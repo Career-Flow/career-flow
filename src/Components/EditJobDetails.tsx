@@ -31,11 +31,10 @@ const EditJobDetails = ({ isOpen, onClose }) => {
   //Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
 
   const [jobData, setJobData] = useState({
-    name: '',
+    company_name: '',
     position: '',
-    linkToJob: '',
+    listing_link: '',
     notes: '',
-    status:'',
   })
 
   const handleChange = (e) => {
@@ -45,13 +44,27 @@ const EditJobDetails = ({ isOpen, onClose }) => {
   }
 
   //Patch
+  const handleSave = async (event) => {
+    event.preventDefault();
+    try {
+      await fetch('/api', {
+        method: 'PATCH',
+        body: JSON.stringify({ jobData }),
+        headers: { 'Content-Type': 'application/json' },
+      }).then(res => res.json())
+        .then(() => console.log('edited job!'))
+    } catch {
+      console.log('edit job unsuccessful')
+    }
+  }
+  
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
-            id="name"
+            id="company_name"
             as={Editable}
             color="#9C4221"
             alignSelf="center"
@@ -59,7 +72,7 @@ const EditJobDetails = ({ isOpen, onClose }) => {
             defaultValue="ReactType"
           >
             <EditablePreview />
-            <EditableInput name="name" value={jobData.name} onChange={handleChange}/>
+            <EditableInput name="company_name" value={jobData.company_name} onChange={handleChange}/>
           </ModalHeader>
           <Text textAlign="center" className="displayDate">
             09/12/23
@@ -82,25 +95,28 @@ const EditJobDetails = ({ isOpen, onClose }) => {
                   defaultValue="https://www.codesmith.io/"
                 >
                   <EditablePreview />
-                  <EditableInput type="url" name="linkToJob" value={jobData.linkToJob} onChange={handleChange}/>
+                  <EditableInput type="url" name="listing_link" value={jobData.listing_link} onChange={handleChange}/>
                 </Editable>
               </Flex>
-              <Flex display="flex" className="reminders">
-              <Text fontWeight="550">Create a reminder: </Text>
-              <Flex>
-              <Input
-                placeholder="Select Date and Time"
-                size="md"
-                type="datetime-local"
-                />
-              <Select placeholder='Select option'>
-                <option value='option1'>Interview</option>
-                <option value='option2'>Thank you notes</option>
-                <option value='option3'>Write a follow up email</option>
-                </Select>
-              </Flex>
-                <Button size="md">Create a reminder</Button>
-              </Flex>
+              <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
+                <Text fontWeight="550">Create a reminder: </Text>
+                <Flex display="flex" flexDirection="column">
+                    <Box display="flex" justifyContent="space-between">
+                      <Input bg="color"
+                        placeholder="Select Date and Time"
+                        size="md"
+                        type="datetime-local"
+                        />
+                      <Select bg="color" pl="2" placeholder='Select option'>
+                        <option value='option1'>Interview</option>
+                        <option value='option2'>Write a follow up email</option>
+                        <option value='option3'>Send a Thank You email</option>
+                      </Select>
+                    </Box>
+                    <Button colorScheme="teal" m="1" alignSelf="flexEnd" size="md">Create</Button>
+                </Flex>
+              </Box>
+              
               <Text fontWeight="550" textAlign="center">
                 Notes:{" "}
               </Text>
@@ -131,7 +147,7 @@ const EditJobDetails = ({ isOpen, onClose }) => {
                 </MenuList>
               </Menu>
             </Box>
-            <Button backgroundColor="#cf9c82" variant="ghost">
+            <Button onClick={handleSave} backgroundColor="#cf9c82" variant="ghost">
               Save
             </Button>
           </ModalFooter>

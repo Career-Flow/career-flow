@@ -21,7 +21,7 @@ const JobContainer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   //const innerRef = useRef(null);
   //renders based off condition: not applied, inprogress, done
-  const [jobCondition, setJobCondition] = useState<JobCondition>("notApplied");
+  const [jobCondition, setJobCondition] = useState<JobCondition>("done");
   const handleDoubleClicked = (event) => {
     if (event.detail == 2) {
       onOpen();
