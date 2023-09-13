@@ -5,7 +5,7 @@ export const app = express();
 
 app.use(express.json());
 
-app.get('/api/test', (_, res: Response) => res.json({ greeting: 'janica is the worst' }));
+app.get('/api/test', (_, res: Response) => res.json({ greeting: 'jordan is the worst' }));
 
 //app.use('/reminder', reminderRouter);
 app.use('/user', userRouter);
