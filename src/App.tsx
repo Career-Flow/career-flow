@@ -9,6 +9,7 @@ import Navbar from "./Components/Navbar";
 import careerflowLogo from "./assets/careerflow.svg";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import { useState } from "react";
+import {Navigate} from 'react-router-dom'
 
 function App() {
   const [apps, setApps] = useState([]); //Use this for the state of the app
