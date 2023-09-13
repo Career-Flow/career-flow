@@ -7,10 +7,12 @@ import Reminder from './Components/Reminder'
 import Navbar from './Components/Navbar'
 import Logo from './assets/careerflow.png'
 import {DragDropContext, OnDragEndResponder} from '@hello-pangea/dnd'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom"
 
 function App() {
   const [apps, setApps] = useState([]);//Use this for the state of the app
+
   const onDragEnd:OnDragEndResponder = (result) =>{
     const {destination, source, draggableId} = result;
     console.log('dest', destination)

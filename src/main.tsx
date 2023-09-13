@@ -1,9 +1,11 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route, useNavigate, Navigate} from "react-router-dom";
 import App from './App.tsx'
 import Login from './Login.tsx'
 import './index.css'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+
 
 const colors = {
   brand: {
@@ -15,11 +17,19 @@ const colors = {
 
 const theme = extendTheme({ colors })
 
+const loggedIn = window.localStorage.getItem('ssid');
+
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login/>} />
+          <Route path="/" element={loggedIn ?<App /> : <Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
   
