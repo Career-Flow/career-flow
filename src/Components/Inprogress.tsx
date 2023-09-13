@@ -1,12 +1,20 @@
-import React from 'react'
-import { Box} from '@chakra-ui/react'
+import { Box, Text} from '@chakra-ui/react'
 import JobContainer from './JobContainer'
+import {Droppable} from '@hello-pangea/dnd'
 
 const Inprogress = () => {
   return (
     <>
-      <Box width="100%" height="100%" bg="#fff8f2"color="black" borderRadius="md" boxShadow='lg' borderWidth="1px" borderColor="#c0b0a9" p="2" display="flex" flexDir="column">
-        Hello I am in progress
+      <Box width="100%" h="100%" bg="#ededed" color="black" borderRadius="md" boxShadow='lg' borderWidth="1px" borderColor="#c0b0a9" p="2" display="flex" flexDir="column">
+      <Text textAlign="center">In Progress</Text>
+      <Droppable droppableId="inprogress">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              <JobContainer/>
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </Box>
     </>
   )

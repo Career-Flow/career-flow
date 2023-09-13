@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState} from "react";
 import {
   Modal,
   ModalOverlay,
@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  Textarea
 } from "@chakra-ui/react";
 import {
   Box,
@@ -18,6 +19,34 @@ import {
 } from "@chakra-ui/react";
 
 const AddJobForm = ({ isOpen, onClose }) => {
+  const [jobData, setJobData] = useState({
+    company_name: '',
+    position: '',
+    listing_link: '',
+    notes: '',
+  })
+
+  //didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await fetch('/api', {
+        method: 'POST',
+        body: JSON.stringify({ jobData }),
+        headers: { 'Content-Type': 'application/json' },
+      }).then(res => res.json())
+        .then(() => console.log('successfully posted job!'))
+    } catch {
+      console.log('job post unsuccessful')
+    }
+  };
+
+  const handleChange=(event)=>{
+    const { name, value} = event.target;
+    setJobData({...jobData, [name]: value})
+    // console.log('job Data', jobData)
+  }
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -29,18 +58,23 @@ const AddJobForm = ({ isOpen, onClose }) => {
             <Box className="addJobContent">
               <FormControl>
                 <FormLabel>Company Name</FormLabel>
-                <Input type="text" />
+                <Input name="company_name" value={jobData.company_name} onChange={handleChange} type="text" />
                 <FormLabel>Position</FormLabel>
-                <Input type="text" />
-                <FormHelperText>We'll never share your email.</FormHelperText>
+                <Input name="position" value={jobData.position} onChange={handleChange} type="text" />
+                <FormLabel>Link to Job Posting</FormLabel>
+                <Input name="listing_link" value={jobData.listing_link} onChange={handleChange} type="url" />
+                <FormLabel>Notes</FormLabel>
+                <Textarea name="notes"
+                  placeholder='Enter job-related notes'
+                  value={jobData.notes} onChange={handleChange}
+                  size='sm'
+                />
+                <FormHelperText>Add notes on the company, references, salary & benefits, interview details, and other information that will help you on your application process!</FormHelperText>
               </FormControl>
             </Box>
           </ModalBody>
           <ModalFooter>
-            <Button backgroundColor="#cf9c82" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Add Job</Button>
+            <Button onClick={handleSubmit} backgroundColor="#cf9c82" variant="ghost">Add Job</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

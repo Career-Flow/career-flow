@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import userRouter from "./routes/userRouter";
-import applicationRouter from "./routes/applicationRouter"
+import userRouter from "./routes/userRouter.ts";
+import applicationRouter from "./routes/applicationRouter.ts"
+
 export const app = express();
 
 app.use(express.json());
@@ -11,11 +12,12 @@ app.get('/api/test', (_, res: Response) => res.json({ greeting: 'jordan is the w
 app.use('/user', userRouter);
 app.use('/application', applicationRouter);
 
-app.use((req: Request, res: Response) =>
+
+app.use((_: Request, res: Response) =>
   res.status(404).send("Page not found...")
 );
 
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, _: Request, res: Response) => {
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
     status: 500,
@@ -26,11 +28,14 @@ app.use((err: Error, req: Request, res: Response) => {
   return res.status(errObj.status).json(errObj.message);
 });
 
-if (!process.env['VITE']) {
-  const frontendFiles = process.cwd() + '/dist';
-  app.use(express.static(frontendFiles));
-  app.get('/*', (_, res) => {
-    res.send(frontendFiles + '/index.html');
-  });
-  app.listen(process.env['PORT']);
-}
+app.listen(3000);
+
+// if (!process.env['VITE']) {
+//   const frontendFiles = process.cwd() + '/dist';
+//   app.use(express.static(frontendFiles));
+//   app.get('/*', (_, res) => {
+//     res.send(frontendFiles + '/index.html');
+//   });
+//   app.listen(process.env['PORT']);
+// }
+
