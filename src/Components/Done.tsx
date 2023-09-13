@@ -2,8 +2,9 @@ import React from "react";
 import { Box, Container, Text } from "@chakra-ui/react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import JobContainer from "./JobContainer";
+import { JobData } from "../App";
 
-const Done = () => {
+const Done = ({ jobs }: { jobs: JobData[] }) => {
   return (
     <>
       <Box

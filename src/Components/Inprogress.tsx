@@ -1,8 +1,9 @@
 import { Box, Text } from "@chakra-ui/react";
 import JobContainer from "./JobContainer";
 import { Droppable } from "@hello-pangea/dnd";
+import { JobData } from "../App";
 
-const Inprogress = () => {
+const Inprogress = ({ jobs }: { jobs: JobData[] }) => {
   return (
     <>
       <Box

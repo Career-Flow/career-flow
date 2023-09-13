@@ -1,29 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Text, Button, Container, Spacer } from "@chakra-ui/react";
 import JobContainer from "./JobContainer";
 import { AddIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
-
+import { JobData } from "../App";
 import AddJobForm from "./AddJobForm";
 
-const NotApplied = () => {
-  const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    //fetch jobs from server
-    fetch("/api")
-      .then((res) => res.json())
-      .then((res) =>
-        res.forEach((newJob) => {
-          setJobs([...jobs, newJob]);
-        })
-      )
-      .catch((err) => {
-        console.log("no jobs yet");
-      });
-  }, [jobs]);
-
+const NotApplied = ({ jobs }: { jobs: JobData[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -47,7 +31,6 @@ const NotApplied = () => {
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <JobContainer />
-
               {provided.placeholder}
             </div>
           )}
