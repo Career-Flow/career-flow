@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  Textarea
 } from "@chakra-ui/react";
 import {
   Box,
@@ -32,15 +33,19 @@ const AddJobForm = ({ isOpen, onClose }) => {
                 <Input type="text" />
                 <FormLabel>Position</FormLabel>
                 <Input type="text" />
-                <FormHelperText>We'll never share your email.</FormHelperText>
+                <FormLabel>Link to Job Posting</FormLabel>
+                <Input type="url" />
+                <FormLabel>Notes</FormLabel>
+                <Textarea
+                    placeholder='Enter job-related notes'
+                    size='sm'
+                />
+                <FormHelperText>Add notes on the company, references, salary & benefits, interview details, and other information that will help you on your application process!</FormHelperText>
               </FormControl>
             </Box>
           </ModalBody>
           <ModalFooter>
-            <Button backgroundColor="#cf9c82" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Add Job</Button>
+            <Button backgroundColor="#cf9c82" variant="ghost">Add Job</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
