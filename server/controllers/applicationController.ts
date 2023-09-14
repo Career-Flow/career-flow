@@ -16,7 +16,7 @@ const applicationController = {
         position,
         listing_link,
         notes,
-        applied_date,        
+        applied_date,
         status_id,
       } = req.body;
       console.log('entering CreateApplication middleware: ReqBody: ', req.body);
@@ -33,7 +33,7 @@ const applicationController = {
         position,
         listing_link,
         notes,
-        applied_date,       
+        applied_date,
         status_id,
       ]);
 
@@ -45,7 +45,7 @@ const applicationController = {
         'Error updating Application in ApplicationController createApplications middleware:',
         err
       );
-      next(err);
+      return next(err);
     }
   },
 
@@ -69,7 +69,7 @@ const applicationController = {
         'Error updating Application in ApplicationController getApplications middleware:',
         err
       );
-      next(err);
+      return next(err);
     }
   },
 

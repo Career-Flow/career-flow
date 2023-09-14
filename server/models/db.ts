@@ -1,7 +1,8 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 
-const PG_URI = 'postgres://kgcavihy:ZstwNDStK7b3hRtSapI0VCbvdXkZP0eF@bubble.db.elephantsql.com/kgcavihy'
+const PG_URI =
+  'postgres://kgcavihy:b5mvCw3uLlyrOCquWW1qkPxatYKwYt3-@bubble.db.elephantsql.com/kgcavihy';
 
 const db = new Pool({
   connectionString: PG_URI,
