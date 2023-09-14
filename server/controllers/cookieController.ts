@@ -3,7 +3,7 @@ import { Response, NextFunction } from 'express';
 const cookieController = {
   // set cookie
   setSSIDCookie: async function (
-    req: Request,
+    _: any,
     res: Response,
     next: NextFunction
   ) {
@@ -11,15 +11,15 @@ const cookieController = {
     // set cookie called ssid to user id after user has been authenticated
     // check if user id exists, if not call global error handler
     try {
-      if (!res.locals._id)
+      if (!res.locals.user)
         return next({
           log: 'error in cookieController.setSSIDCookie',
           message: {
             err: `Error user id undefined`,
           },
-        });
-      const { _id } = res.locals.user;
-      res.cookie('ssid', _id, {
+      });
+      const { cookie } = res.locals.user;
+      res.cookie('ssid', cookie, {
         httpOnly: true,
       });
       console.log('reached the end of setSSIDCookie');
@@ -35,7 +35,7 @@ const cookieController = {
   },
   // delete cookie
   deleteSSIDCookie: async function (
-    req: Request,
+    _: any,
     res: Response,
     next: NextFunction
   ) {

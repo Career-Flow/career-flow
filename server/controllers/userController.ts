@@ -24,7 +24,7 @@ const userController = {
       return next();
     } catch (err) {
       console.error('Error creating user:', err);
-      next(err);
+      return next(err);
     }
   },
 
@@ -33,18 +33,18 @@ const userController = {
       const { email, password } = req.body;
 
       const findUserQuery = `
-        SELECT email, password
+        SELECT *
         FROM users
         WHERE email = $1 AND password = $2
       `;
 
       const result = await db.query(findUserQuery, [email, password]);
-
       res.locals.user = result.rows[0];
+      console.log(res.locals.user);
       return next();
     } catch (err) {
       console.error('Error verifying user:', err);
-      next(err);
+      return next(err);
     }
   },
 };
