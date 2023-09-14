@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Box, Text, Button, Container, Spacer } from "@chakra-ui/react";
 import JobContainer from "./JobContainer";
 import { AddIcon } from "@chakra-ui/icons";
@@ -6,9 +6,15 @@ import { useDisclosure } from "@chakra-ui/react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { JobData } from "../App";
 import AddJobForm from "./AddJobForm";
+import { v4 as uuidv4 } from 'uuid';
 
 const NotApplied = ({ jobs }: { jobs: JobData[] }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const jobList = jobs.map((job, index) => <JobContainer job={job} index= {index} key ={uuidv4()}/>)
+
+  console.log('not applied joblist', jobList)
+
   return (
     <>
       <Box
@@ -30,7 +36,7 @@ const NotApplied = ({ jobs }: { jobs: JobData[] }) => {
         <Droppable droppableId="notapplied">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              {/* <JobContainer /> */}
+             {jobList}
               {provided.placeholder}
             </div>
           )}

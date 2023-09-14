@@ -2,8 +2,14 @@ import { Box, Text } from "@chakra-ui/react";
 import JobContainer from "./JobContainer";
 import { Droppable } from "@hello-pangea/dnd";
 import { JobData } from "../App";
+import { v4 as uuidv4 } from 'uuid';
 
 const Inprogress = ({ jobs }: { jobs: JobData[] }) => {
+
+  const jobList = jobs.map((job, index) => <JobContainer job={job} index = {index} key ={uuidv4()}/>)
+
+  console.log('in progress joblist', jobList)
+
   return (
     <>
       <Box
@@ -25,7 +31,7 @@ const Inprogress = ({ jobs }: { jobs: JobData[] }) => {
         <Droppable droppableId="inprogress">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              <JobContainer />
+              {jobList}
               {provided.placeholder}
             </div>
           )}

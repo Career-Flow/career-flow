@@ -16,10 +16,13 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import EditJobDetails from "./EditJobDetails";
 import { Draggable } from "@hello-pangea/dnd";
+import { JobData } from "../App";
+import statuses from "./Statuses";
 
 type JobCondition = "notApplied" | "inProgress" | "done";
 
-const JobContainer = () => {
+const JobContainer = ({ job, index }: { job: JobData, index: number }) => {
+  console.log('jobcontainer job.status', job.status)
   const { isOpen, onOpen, onClose } = useDisclosure();
   //const innerRef = useRef(null);
   //renders based off condition: not applied, inprogress, done
@@ -54,7 +57,7 @@ const JobContainer = () => {
   //done: name of company, role, accepted/rejected/ghosted - emoji
   return (
     <>
-      <Draggable draggableId={"column55inprogress"} index={777}>
+      <Draggable draggableId={job.app_id} index={index}>
         {(provided, snapshot) => (
           <>
             <Box
@@ -68,13 +71,13 @@ const JobContainer = () => {
               p="2.5"
               boxShadow="sm"
             >
-              {jobCondition === "notApplied" && (
+              {statuses[job.status] === "notapplied" && (
                 <Box>
                   <p>Company: ReactType</p>
                   <p>Role: Software Engineer</p>
                 </Box>
               )}
-              {jobCondition === "inProgress" && (
+              {statuses[job.status] === "inprogress" && (
                 <Box
                   display="flex"
                   flexDirection="row"
@@ -106,7 +109,7 @@ const JobContainer = () => {
                   </div>
                 </Box>
               )}
-              {jobCondition === "done" && (
+              {job.status === "done" && (
                 <Box
                   display="flex"
                   flexDirection="row"
@@ -126,6 +129,7 @@ const JobContainer = () => {
               </Text> */}
                 </Box>
               )}
+
             </Box>
             <EditJobDetails isOpen={isOpen} onClose={onClose} />
           </>
