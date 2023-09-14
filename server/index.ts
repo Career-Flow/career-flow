@@ -1,10 +1,15 @@
 import express, { Request, Response } from "express";
+import cookieParser from "cookie-parser"
+// @ts-ignore
 import userRouter from "./routes/userRouter.ts";
+// @ts-ignore
 import applicationRouter from "./routes/applicationRouter.ts"
 
 export const app = express();
 
+
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/api/test', (_, res: Response) => res.json({ greeting: 'jordan is the worst!' }));
 

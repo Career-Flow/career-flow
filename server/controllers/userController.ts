@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+// @ts-ignore
 import db from '../models/db.ts';
 
 const userController = {
