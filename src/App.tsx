@@ -9,6 +9,7 @@ import Navbar from "./Components/Navbar";
 import careerflowLogo from "./assets/careerflow.svg";
 import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
 import {Navigate} from 'react-router-dom'
+import statuses from "./Components/Statuses";
 
 export interface JobData {
   user_id: string,
@@ -26,12 +27,62 @@ export interface JobData {
   }[]
 }
 
+let dummyData = [
+  {
+    user_id: '123456',
+    app_id: '1234567',
+    company_name: 'test1',
+    position: 'some job',
+    listing_link: 'some link',
+    notes: 'got money?',
+    applied_date: new Date(),
+    last_updated: new Date(),
+    status: 'Not Applied',
+    reminders: [{
+      reminderDate: new Date(),
+      reminderType: ''
+    }]
+  },
+  {
+    user_id: '234567',
+    app_id: '2345678',
+    company_name: 'test1',
+    position: 'some job',
+    listing_link: 'some link',
+    notes: 'got money?',
+    applied_date: new Date(),
+    last_updated: new Date(),
+    status: 'Interviewing',
+    reminders: [{
+      reminderDate: new Date(),
+      reminderType: ''
+    }]
+  },
+  {
+    user_id: '345678',
+    app_id: '3456789',
+    company_name: 'test1',
+    position: 'some job',
+    listing_link: 'some link',
+    notes: 'got money?',
+    applied_date: new Date(),
+    last_updated: new Date(),
+    status: 'Applied',
+    reminders: [{
+      reminderDate: new Date(),
+      reminderType: ''
+    }]
+  }
+]
+
 function App() {
-  const [jobs, setJobs] = useState<JobData[]>([]);//Use this for the state of the jobs, we expect an array of JobData objects
+  const [jobs, setJobs] = useState<JobData[]>(dummyData);//Use this for the state of the jobs, we expect an array of JobData objects
   //this.state.jobs = [{}, {},{}]
-  const [nAJobs, setnAJobs] = useState<JobData[]>([]);
-  const [iPJobs, setIPJobs] = useState<JobData[]>([]);
+  const [nAJobs, setnAJobs] = useState<JobData[]>([dummyData[0]]);
+  const [iPJobs, setIPJobs] = useState<JobData[]>([dummyData[1], dummyData[2]]);
   const [doneJobs, setDoneJobs] = useState<JobData[]>([]);
+
+  
 
   useEffect(() => {
     //fetch jobs from server
@@ -71,6 +122,12 @@ function App() {
   }
 
   */
+
+  useEffect(()=>{
+    console.log('nAJobs', nAJobs)
+    console.log('iPJobs', iPJobs)
+
+  }, [nAJobs, iPJobs])
   
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source, draggableId } = result; //drag info for the active job
@@ -83,29 +140,42 @@ function App() {
       (destination.droppableId === source.droppableId &&
         destination.index === source.index)
     ) {
+      console.log('returned out of onDragEnd')
       return;
     }
     //after dropping we need to change the status of the item that was dragged
     //Also rearrange the order in the respective array
     let temp:JobData;
-    if(source.droppableId === 'Not Applied'){
+        
+    if(source.droppableId === 'notapplied'){
+      console.log('source was notapplied')
       //get the destination.id, 
       nAJobs.map((job)=> {
         if (job.app_id === result.draggableId) {
           //source -> destination
           temp = Object.assign({}, job);
-          temp.status = destination.droppableId;
+          switch(destination.droppableId){
+            case 'inprogress':
+              temp.status = 'Applied';
+              break;
+            case 'notapplied':
+              temp.status = 'Not Applied';
+              break;
+          }
+          console.log('after switch temp.status', temp.status)
           //we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
           const copynAJobs = [...nAJobs]
-          if(destination.droppableId === 'Applied' || destination.droppableId ==='Interviewing' || destination.droppableId === 'Waiting'){
-            setIPJobs(iPJobs.splice(destination.index, 0, temp)) //add to destination
+          const copyiPJobs = [...iPJobs]
+          if(destination.droppableId === 'inprogress'){
+            copyiPJobs.splice(destination.index, 0, temp)
+            setIPJobs(copyiPJobs)
             copynAJobs.splice(source.index, 1); 
             setnAJobs(copynAJobs)
           } else if(destination.droppableId === 'Rejected' || destination.droppableId === 'Ghosted'){
             setDoneJobs(doneJobs.splice(destination.index, 0, temp))
             copynAJobs.splice(source.index, 1); 
             setnAJobs(copynAJobs)
-          } else if(destination.droppableId === 'Not Applied'){
+          } else if(destination.droppableId === 'notapplied'){
             copynAJobs.splice(destination.index, 0, temp);
             copynAJobs.splice(source.index, 1); 
             setnAJobs(copynAJobs)
@@ -113,24 +183,35 @@ function App() {
         }
       })
     }
-    else if(source.droppableId === 'Applied' || source.droppableId ==='Interviewing' || source.droppableId === 'Waiting'){
+    else if(source.droppableId === 'inprogress'){
+      console.log('source was inprogress')
       //get the destination.id, 
       iPJobs.map((job)=> {
         if (job.app_id === result.draggableId) {
           //source -> destination
           temp = Object.assign({}, job);
-          temp.status = destination.droppableId;
+          switch(destination.droppableId){
+            case 'inprogress':
+              temp.status = 'Applied';
+              break;
+            case 'notapplied':
+              temp.status = 'Not Applied';
+              break;
+          }
+          console.log('after switch temp.status', temp.status)
           //we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
+          const copynAJobs = [...nAJobs]
           const copyiPJobs = [...iPJobs]
-          if(destination.droppableId === 'Not Applied'){
-            setnAJobs(nAJobs.splice(destination.index, 0, temp)) //add to destination
+          if(destination.droppableId === 'notapplied'){
+            copynAJobs.splice(destination.index, 0, temp)
+            setnAJobs(copynAJobs) //add to destination
             copyiPJobs.splice(source.index, 1); 
             setIPJobs(copyiPJobs)
           } else if(destination.droppableId === 'Rejected' || destination.droppableId === 'Ghosted'){
             setDoneJobs(doneJobs.splice(destination.index, 0, temp))
             copyiPJobs.splice(source.index, 1); 
             setIPJobs(copyiPJobs)
-          } else if(destination.droppableId === 'Applied' || destination.droppableId ==='Interviewing' || destination.droppableId === 'Waiting'){
+          } else if(destination.droppableId === 'inprogress'){
             copyiPJobs.splice(destination.index, 0, temp);
             copyiPJobs.splice(source.index, 1); 
             setIPJobs(copyiPJobs)
@@ -138,6 +219,8 @@ function App() {
         }
       })
     }
+    //not yet flushed out the logic for this special double column
+    //same for the other options involving the Done column above
     else if(source.droppableId === 'Rejected' || source.droppableId === 'Ghosted'){
       //get the destination.id, 
       doneJobs.map((job)=> {
@@ -147,11 +230,11 @@ function App() {
           temp.status = destination.droppableId;
           //we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
           const copyDoneJobs = [...doneJobs]
-          if(destination.droppableId === 'Applied' || destination.droppableId ==='Interviewing' || destination.droppableId === 'Waiting'){
+          if(statusConvert[destination.droppableId] === 'inprogress'){
             setIPJobs(iPJobs.splice(destination.index, 0, temp)) //add to destination
             copyDoneJobs.splice(source.index, 1); 
             setDoneJobs(copyDoneJobs)
-          } else if(destination.droppableId === 'Not Applied'){
+          } else if(statusConvert[destination.droppableId] === 'notapplied'){
             setDoneJobs(nAJobs.splice(destination.index, 0, temp))
             copyDoneJobs.splice(source.index, 1); 
             setDoneJobs(copyDoneJobs)
@@ -168,14 +251,14 @@ function App() {
       //get the position of the job (where the job was initially)
       //create a new jobsId array Array.from(notApplied.job)
   };
+//Auth should go here
+  // const loggedIn = window.localStorage.getItem("ssid");
+  // console.log(loggedIn);
 
-  const loggedIn = window.localStorage.getItem("ssid");
-  console.log(loggedIn);
-
-  if (loggedIn == "guest") {
-    // Redirect to the login page or show an access denied message
-    return <Navigate to="/login" replace />;
-  }
+  // if (loggedIn == "guest") {
+  //   // Redirect to the login page or show an access denied message
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return (
     <>
