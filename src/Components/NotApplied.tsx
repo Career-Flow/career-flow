@@ -30,7 +30,7 @@ const NotApplied = ({ jobs }: { jobs: JobData[] }) => {
         <Droppable droppableId="notapplied">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              <JobContainer />
+              {/* <JobContainer /> */}
               {provided.placeholder}
             </div>
           )}

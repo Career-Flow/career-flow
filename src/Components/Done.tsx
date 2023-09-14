@@ -26,7 +26,7 @@ const Done = ({ jobs }: { jobs: JobData[] }) => {
             <Box h="70%">
               Result
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <JobContainer />
+                {/* <JobContainer /> */}
                 {provided.placeholder}
               </div>
             </Box>
@@ -37,7 +37,7 @@ const Done = ({ jobs }: { jobs: JobData[] }) => {
             <Box h="25%">
               👻 Ghosted
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <JobContainer />
+                {/* <JobContainer /> */}
                 {provided.placeholder}
               </div>
             </Box>
@@ -52,29 +52,3 @@ const Done = ({ jobs }: { jobs: JobData[] }) => {
 };
 
 export default Done;
-
-{
-  /* <Box
-w="100%"
-h="100%"
-bg="#ededed"
-color="black"
-borderRadius="md"
-boxShadow="lg"
-borderWidth="1px"
-borderColor="#c0b0a9"
-p="2"
->
-<Text textAlign="center">In Progress</Text>
-
-      <Box h="70%">Result
-
-
-      </Box>
-      <Box h="25%">👻 Ghosted</Box>
-
-
-
-
-</Box> */
-}
