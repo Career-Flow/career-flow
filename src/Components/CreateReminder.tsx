@@ -41,6 +41,7 @@ const CreateReminder = (props) => {
           <Input
             name="reminderDate"
             onChange={updateReminder}
+            theme="orange"
             bg="color"
             placeholder="Select Date and Time"
             size="md"
@@ -66,7 +67,7 @@ const CreateReminder = (props) => {
         </Box>
         <Button
           onClick={handleReminder}
-          colorScheme="teal"
+          colorScheme="orange"
           mt="2"
           alignSelf="flexEnd"
           size="md"
