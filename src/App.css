@@ -1,13 +1,3 @@
-.jobFooterContainer {
-  display: flex;
-  justify-content: space-between;
-}
-
-.displayDate {
-  color: #a6a6a6;
-  font-weight: 400;
-  font-size: 0.85rem;
-}
 
 html,
 body {
@@ -18,4 +8,15 @@ body {
 
 p {
   font-weight: 300;
+}
+
+.jobFooterContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.displayDate {
+  color: #a6a6a6;
+  font-weight: 400;
+  font-size: 0.85rem;
 }
