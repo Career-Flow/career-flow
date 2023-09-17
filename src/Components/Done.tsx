@@ -4,7 +4,7 @@ import { Droppable } from '@hello-pangea/dnd';
 import { v4 as uuidv4 } from 'uuid';
 import JobContainer from './JobContainer';
 import { JobData } from '../Types';
-import statuses from './Statuses';
+import statuses from '../Statuses';
 
 function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs: JobData[] }) {
   const resultJobList = resultJobs.map((job, index) => (

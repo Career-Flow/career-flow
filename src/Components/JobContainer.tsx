@@ -9,7 +9,7 @@ import {
 import { Draggable } from '@hello-pangea/dnd';
 import EditJobDetails from './EditJobDetails';
 import { JobData } from '../Types';
-import statuses from './Statuses';
+import statuses from '../Statuses';
 
 type JobCondition = 'notApplied' | 'inProgress' | 'done';
 

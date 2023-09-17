@@ -8,7 +8,7 @@ import Done from './Components/Done';
 import Reminders from './Components/Reminders';
 import Navbar from './Components/Navbar';
 import careerflowLogo from './assets/careerflow.svg';
-import statuses, { statusSwitch } from './Components/Statuses';
+import statuses, { statusSwitch } from './Statuses';
 import { JobData } from './Types';
 
 const dummyData = [
@@ -113,28 +113,68 @@ function App() {
     console.log('doneJobs', resultJobs);
   }, [nAJobs, iPJobs, resultJobs]);
 
-  //  next will try to modularize with a switch statement
-  //  const updateStateAndSet =() => {
-  //   const copiedStateArray = [...stateArray];
-  //   copiedStateArray.splice(index, 0, item);
-  
-  //   switch (destinationId) {
-  //     case 'notapplied':
-  //       setnAJobs(copiedStateArray);
-  //       break;
-  //     case 'inprogress':
-  //       setIPJobs(copiedStateArray);
-  //       break;
-  //     case 'result':
-  //       setResultJobs(copiedStateArray);
-  //       break;
-  //     case 'ghosted':
-  //       setGhostedJobs(copiedStateArray);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
+  // type for the source and destination objects from the dnd result
+  type SourceOrDest = {
+    droppableId: string,
+    index: number
+  };
+
+  const updateStateAndSet = (job:JobData, source: SourceOrDest, destination:SourceOrDest) => {
+    // make a copy of the job
+    // switch the status from the source status to the destination column status
+    const temp = { ...job };
+    temp.status = statusSwitch(destination.droppableId);
+    console.log('after switch temp.status', temp.status);
+    // make copies of all the states
+    const copynAJobs = [...nAJobs];
+    const copyiPJobs = [...iPJobs];
+    const copyResultJobs = [...resultJobs];
+    const copyGhostedJobs = [...ghostedJobs];
+
+    // alter the state of the destination columns for the moved job
+    switch (destination.droppableId) {
+      case 'notapplied':
+        copynAJobs.splice(destination.index, 0, temp);
+        setnAJobs(copynAJobs);
+        break;
+      case 'inprogress':
+        copyiPJobs.splice(destination.index, 0, temp);
+        setIPJobs(copyiPJobs);
+        break;
+      case 'result':
+        copyResultJobs.splice(destination.index, 0, temp);
+        setResultJobs(copyResultJobs);
+        break;
+      case 'ghosted':
+        copyGhostedJobs.splice(destination.index, 0, temp);
+        setGhostedJobs(copyGhostedJobs);
+        break;
+      default:
+        break;
+    }
+
+    // remove the moved job from the originating column
+    switch (source.droppableId) {
+      case 'notapplied':
+        copynAJobs.splice(source.index, 1);
+        setnAJobs(copynAJobs);
+        break;
+      case 'inprogress':
+        copyiPJobs.splice(source.index, 1);
+        setIPJobs(copyiPJobs);
+        break;
+      case 'result':
+        copyResultJobs.splice(source.index, 1);
+        setResultJobs(copyResultJobs);
+        break;
+      case 'ghosted':
+        copyGhostedJobs.splice(source.index, 1);
+        setGhostedJobs(copyGhostedJobs);
+        break;
+      default:
+        break;
+    }
+  };
 
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source, draggableId } = result; // drag info for the active job
@@ -152,37 +192,14 @@ function App() {
     }
     // after dropping we need to change the status of the item that was dragged
     // Also rearrange the order in the respective array
-    let temp:JobData;
 
     if (source.droppableId === 'notapplied') {
       console.log('source was notapplied');
-      // get the destination.id,
       nAJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
           // source -> destination
-          temp = { ...job };
-          temp.status = statusSwitch(destination.droppableId);
-          console.log('after switch temp.status', temp.status);
-          // we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
-          const copynAJobs = [...nAJobs];
-          const copyiPJobs = [...iPJobs];
-          const copyResultJobs = [...resultJobs];
-          const copyGhostedJobs = [...ghostedJobs];
-          if (destination.droppableId === 'inprogress') {
-            copyiPJobs.splice(destination.index, 0, temp);
-            setIPJobs(copyiPJobs);
-          } else if (destination.droppableId === 'result') {
-            copyResultJobs.splice(destination.index, 0, temp);
-            setResultJobs(copyResultJobs);
-          } else if (destination.droppableId === 'ghosted') {
-            copyGhostedJobs.splice(destination.index, 0, temp);
-            setGhostedJobs(copyGhostedJobs);
-          } else if (destination.droppableId === 'notapplied') {
-            copynAJobs.splice(destination.index, 0, temp);
-          }
-          copynAJobs.splice(source.index, 1);
-          setnAJobs(copynAJobs);
+          updateStateAndSet(job, source, destination);
         }
       });
     } else if (source.droppableId === 'inprogress') {
@@ -191,28 +208,7 @@ function App() {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
           // source -> destination
-          temp = { ...job };
-          temp.status = statusSwitch(destination.droppableId);
-          console.log('after switch temp.status', temp.status);
-          // we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
-          const copynAJobs = [...nAJobs];
-          const copyiPJobs = [...iPJobs];
-          const copyResultJobs = [...resultJobs];
-          const copyGhostedJobs = [...ghostedJobs];
-          if (destination.droppableId === 'notapplied') {
-            copynAJobs.splice(destination.index, 0, temp);
-            setnAJobs(copynAJobs); // add to destination
-          } else if (destination.droppableId === 'result') {
-            copyResultJobs.splice(destination.index, 0, temp);
-            setResultJobs(copyResultJobs);
-          } else if (destination.droppableId === 'ghosted') {
-            copyGhostedJobs.splice(destination.index, 0, temp);
-            setGhostedJobs(copyGhostedJobs);
-          } else if (destination.droppableId === 'inprogress') {
-            copyiPJobs.splice(destination.index, 0, temp);
-          }
-          copyiPJobs.splice(source.index, 1);
-          setIPJobs(copyiPJobs);
+          updateStateAndSet(job, source, destination);
         }
       });
     } else if (source.droppableId === 'result') {
@@ -221,28 +217,7 @@ function App() {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
           // source -> destination
-          temp = { ...job };
-          temp.status = statusSwitch(destination.droppableId);
-          console.log('after switch temp.status', temp.status);
-          // we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
-          const copynAJobs = [...nAJobs];
-          const copyiPJobs = [...iPJobs];
-          const copyResultJobs = [...resultJobs];
-          const copyGhostedJobs = [...ghostedJobs];
-          if (destination.droppableId === 'notapplied') {
-            copynAJobs.splice(destination.index, 0, temp);
-            setnAJobs(copynAJobs); // add to destination
-          } else if (destination.droppableId === 'inprogress') {
-            copyiPJobs.splice(destination.index, 0, temp);
-            setIPJobs(copyiPJobs);
-          } else if (destination.droppableId === 'ghosted') {
-            copyGhostedJobs.splice(destination.index, 0, temp);
-            setGhostedJobs(copyGhostedJobs);
-          } else if (destination.droppableId === 'result') {
-            copyResultJobs.splice(destination.index, 0, temp);
-          }
-          copyResultJobs.splice(source.index, 1);
-          setResultJobs(copyResultJobs);
+          updateStateAndSet(job, source, destination);
         }
       });
     } else if (source.droppableId === 'ghosted') {
@@ -251,35 +226,10 @@ function App() {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
           // source -> destination
-          temp = { ...job };
-          temp.status = statusSwitch(destination.droppableId);
-          console.log('after switch temp.status', temp.status);
-          // we need to copy the nAJobs array, remove the job from it, and reset the nAJobs array
-          const copynAJobs = [...nAJobs];
-          const copyiPJobs = [...iPJobs];
-          const copyResultJobs = [...resultJobs];
-          const copyGhostedJobs = [...ghostedJobs];
-          if (destination.droppableId === 'notapplied') {
-            copynAJobs.splice(destination.index, 0, temp);
-            setnAJobs(copynAJobs); // add to destination
-          } else if (destination.droppableId === 'inprogress') {
-            copyiPJobs.splice(destination.index, 0, temp);
-            setIPJobs(copyiPJobs);
-          } else if (destination.droppableId === 'result') {
-            copyResultJobs.splice(destination.index, 0, temp);
-            setResultJobs(copyResultJobs);
-          } else if (destination.droppableId === 'ghosted') {
-            copyGhostedJobs.splice(destination.index, 0, temp);
-          }
-          copyGhostedJobs.splice(source.index, 1);
-          setGhostedJobs(copyGhostedJobs);
+          updateStateAndSet(job, source, destination);
         }
       });
     }
-
-    // in state of the app, there should be the columns: notApplied, inProgress, Done
-    // get the position of the job (where the job was initially)
-    // create a new jobsId array Array.from(notApplied.job)
   };
   // Auth should go here
   // const loggedIn = window.localStorage.getItem("ssid");
