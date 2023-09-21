@@ -21,5 +21,15 @@ module.exports = {
     ],
     'react/react-in-jsx-scope': 'off',
     'no-console': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        'js': 'always',
+        'jsx': 'always',
+        'ts': 'always',
+        'tsx': 'always'
+      }
+   ]
   },
 }
