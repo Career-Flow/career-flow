@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 // @ts-ignore
 import userRouter from "./routes/userRouter.ts";
@@ -7,21 +8,20 @@ import applicationRouter from "./routes/applicationRouter.ts";
 // @ts-ignore
 import db from "./models/db.js";
 export const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/api/test", (_, res: Response) =>
-  res.json({ greeting: "jordan is the worst!" })
-);
-
 //app.use('/reminder', reminderRouter);
-app.use("/user", userRouter, (_, res) => {
-  return res.json();
-});
-app.use("/application", applicationRouter, (_, res) => {
-  return res.json("query sent through to database");
-});
+// app.use("/signup", userRouter, (req, _) => {
+//   console.log("user", req.body);
+// });
+
+app.post("/user", userRouter, (req) => console.log(req.body));
+// app.use("/application", applicationRouter, (_, res) => {
+//   return res.json("query sent through to database");
+// });
 
 app.use((_: Request, res: Response) =>
   res.status(404).send("Page not found...")

@@ -29,12 +29,10 @@ function Login() {
   const handleShowClick = () => setShowPassword(!showPassword);
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Replace with your API endpoint
-    const endpoint = "https://api.example.com/create-account";
+    console.log("email", email, password);
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch("/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,19 +111,19 @@ function Login() {
                   </InputRightElement>
                 </InputGroup>
                 <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
+                  {/* <Link>forgot password?</Link> */}
                 </FormHelperText>
               </FormControl>
-              <Button
-                borderRadius={0}
-                type="submit"
-                variant="solid"
-                colorScheme="teal"
-                width="full"
-              >
-                Login
-              </Button>
             </Stack>
+            <Button
+              borderRadius={0}
+              type="submit"
+              variant="solid"
+              colorScheme="teal"
+              width="full"
+            >
+              Signup
+            </Button>
           </form>
         </Box>
       </Stack>

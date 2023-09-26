@@ -1,15 +1,15 @@
-import express from 'express';
+import express from "express";
 // @ts-ignore
-import userController from '../controllers/userController.ts';
+import userController from "../controllers/userController.ts";
 // import sessionController from "../controllers/sessionController.ts";
 // @ts-ignore
 // import cookieController from '../controllers/cookieController.ts';
 
-const router = express.Router();
+const userRouter = express.Router();
 
 // signup - POST '/'
-router.post(
-  '/signup',
+userRouter.post(
+  "/signup",
   userController.createUser,
   // cookieController.setSSIDCookie,
   (_, res) => {
@@ -18,8 +18,8 @@ router.post(
 );
 
 // router.post('/login')
-router.post(
-  '/login',
+userRouter.post(
+  "/login",
   userController.verifyUser,
   // cookieController.setSSIDCookie,
   (_, res) => {
@@ -29,4 +29,4 @@ router.post(
 // cookie parser
 // bycrypt? jwt?
 
-export default router;
+export default userRouter;
