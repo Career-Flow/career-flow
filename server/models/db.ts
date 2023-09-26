@@ -1,19 +1,19 @@
-import pkg from 'pg';
+import pkg from "pg";
 const { Pool } = pkg;
 
 const PG_URI =
-  'postgres://kgcavihy:b5mvCw3uLlyrOCquWW1qkPxatYKwYt3-@bubble.db.elephantsql.com/kgcavihy';
+  "postgres://zasayxvv:jRSDOz6yyfv51BZ7bwGcPk1_sIL7ZfRm@bubble.db.elephantsql.com/zasayxvv";
 
 const db = new Pool({
   connectionString: PG_URI,
 });
 
-db.on('connect', () => {
-  console.log('Connected to the database!');
+db.on("connect", () => {
+  console.log("Connected to the database!");
 });
 
-db.on('error', (err) => {
-  console.error('Error connecting to the database:', err);
+db.on("error", (err) => {
+  console.error("Error connecting to the database:", err);
 });
 
 export default db;

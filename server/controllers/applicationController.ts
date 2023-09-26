@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 // @ts-ignore
-import db from '../models/db.ts';
+import db from "../models/db.ts";
 
 const applicationController = {
   // create application
@@ -10,39 +10,41 @@ const applicationController = {
     next: NextFunction
   ) {
     try {
-      const {
-        user_id,
-        company_name,
-        position,
-        listing_link,
-        notes,
-        applied_date,
-        status_id,
-      } = req.body;
-      console.log('entering CreateApplication middleware: ReqBody: ', req.body);
-      const createQuery = `
-            INSERT INTO applications
-            (user_id, company_name, position, listing_link,notes,applied_date,status_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING *;
-        `;
+      // const {
+      //   user_id,
+      //   company_name,
+      //   position,
+      //   listing_link,
+      //   notes,
+      //   applied_date,
+      //   status_id,
+      // } = req.body;
+      console.log("entering CreateApplication middleware: ReqBody: ", req.body);
+      // const createQuery = `
+      //       INSERT INTO applications
+      //       (user_id, company_name, position, listing_link,notes,applied_date,status_id)
+      //       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      //       RETURNING *;
+      //   `;
 
-      const result = await db.query(createQuery, [
-        user_id,
-        company_name,
-        position,
-        listing_link,
-        notes,
-        applied_date,
-        status_id,
-      ]);
+      const result = await db.query("SELECT NOW()");
+      console.log("Successfully executed query", result.rows[0]);
+      // const result = await db.query(createQuery, [
+      //   user_id,
+      //   company_name,
+      //   position,
+      //   listing_link,
+      //   notes,
+      //   applied_date,
+      //   status_id,
+      // ]);
 
-      res.locals.application = result.rows[0];
-      console.log('made it to end of createUser', res.locals.user);
+      // res.locals.application = result.rows[0];
+      console.log("made it to end of createUser", res.locals.user);
       return next();
     } catch (err) {
       console.error(
-        'Error updating Application in ApplicationController createApplications middleware:',
+        "Error updating Application in ApplicationController createApplications middleware:",
         err
       );
       return next(err);
@@ -56,7 +58,7 @@ const applicationController = {
   ) {
     try {
       const { user_id } = req.body;
-      console.log('entering getApplications middleware user_id:', user_id);
+      console.log("entering getApplications middleware user_id:", user_id);
       const userIdQuery = `
       SELECT *
       FROM applications
@@ -66,7 +68,7 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        'Error updating Application in ApplicationController getApplications middleware:',
+        "Error updating Application in ApplicationController getApplications middleware:",
         err
       );
       return next(err);
@@ -90,7 +92,7 @@ const applicationController = {
         status_id,
         id,
       } = req.body;
-      console.log('entering updateApplication middleware req.body: ', req.body);
+      console.log("entering updateApplication middleware req.body: ", req.body);
       const updateQuery = `
       UPDATE applications
       SET ( user_id, company_name, position, listing_link, notes, applied_date, last_updated,status_id ) = ( $1, $2, $3, $4, $5, $6, $7, $8)
@@ -113,7 +115,7 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        'Error updating Application in ApplicationController updateApplication middleware:',
+        "Error updating Application in ApplicationController updateApplication middleware:",
         err
       );
       next(err);
@@ -127,7 +129,7 @@ const applicationController = {
   ) {
     try {
       const { id } = req.body;
-      console.log('entering deleteApplication middleware: ID:', id);
+      console.log("entering deleteApplication middleware: ID:", id);
 
       const deleteQuery = `
       DELETE FROM applications
@@ -140,7 +142,7 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        'Error updating Application in ApplicationController deleteApplication middleware:',
+        "Error updating Application in ApplicationController deleteApplication middleware:",
         err
       );
       next(err);

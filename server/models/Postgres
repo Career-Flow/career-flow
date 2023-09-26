@@ -1,8 +1,8 @@
 CREATE TABLE sessions (
   _id SERIAL PRIMARY KEY,
-  user_id INTEGER references users (_id),
-  cookie_id: VARCHAR(255) UNIQUE NOT NULL
-)
+  user_id INTEGER REFERENCES users (_id),
+  cookie_id VARCHAR(255) UNIQUE NOT NULL
+);
 
 CREATE TABLE users (
   _id SERIAL PRIMARY KEY,

@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from "react";
 
-import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -15,17 +14,45 @@ import {
   Avatar,
   FormControl,
   FormHelperText,
-  InputRightElement
+  InputRightElement,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-const Login = () => {
+function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleShowClick = () => setShowPassword(!showPassword);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Replace with your API endpoint
+    const endpoint = "https://api.example.com/create-account";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      // Check for success
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Account successfully created", data);
+      } else {
+        console.error("Error creating account", response);
+      }
+    } catch (error) {
+      console.error("Network error", error);
+    }
+  };
 
   return (
     <Flex
@@ -43,9 +70,9 @@ const Login = () => {
         alignItems="center"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Heading color="teal.400">Sign up with us!</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
-          <form>
+          <form onSubmit={handleSubmit}>
             <Stack
               spacing={4}
               p="1rem"
@@ -58,7 +85,12 @@ const Login = () => {
                     pointerEvents="none"
                     children={<CFaUserAlt color="gray.300" />}
                   />
-                  <Input type="email" placeholder="email address" />
+                  <Input
+                    type="email"
+                    placeholder="email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </InputGroup>
               </FormControl>
               <FormControl>
@@ -66,11 +98,13 @@ const Login = () => {
                   <InputLeftElement
                     pointerEvents="none"
                     color="gray.300"
-                    children={<CFaLock color="gray.300" />}
+                    children={<CFaLock color="orange.300" />}
                   />
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
@@ -103,6 +137,6 @@ const Login = () => {
       </Box>
     </Flex>
   );
-};
+}
 
 export default Login;

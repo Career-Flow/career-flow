@@ -30,7 +30,7 @@ const AddJobForm = ({ isOpen, onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await fetch("/api", {
+      await fetch("/application", {
         method: "POST",
         body: JSON.stringify({ jobData }),
         headers: { "Content-Type": "application/json" },
