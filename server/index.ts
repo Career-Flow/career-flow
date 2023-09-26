@@ -12,6 +12,7 @@ export const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use("/", userRouter);
 
 app.get("/", () => console.log("hi"));
 
@@ -21,7 +22,7 @@ app.get("/api/test", (_, res) => {
 });
 //app.use('/reminder', reminderRouter);
 
-app.use("/api/login", userRouter, (req, _) => {
+app.use("/login", userRouter, (req, _) => {
   console.log("user", req.body);
 });
 

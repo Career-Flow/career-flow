@@ -68,7 +68,7 @@ function Login() {
         alignItems="center"
       >
         <Avatar bg="teal.500" />
-        <Heading color="teal.400">Sign up with us!</Heading>
+        <Heading color="teal.400">Sign in!</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form onSubmit={handleSubmit}>
             <Stack
@@ -122,7 +122,7 @@ function Login() {
               colorScheme="teal"
               width="full"
             >
-              Signup
+              Sign in
             </Button>
           </form>
         </Box>

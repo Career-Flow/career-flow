@@ -31,16 +31,17 @@ const userController = {
 
   verifyUser: async function (req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("userController req bdy", req.body);
       const { email, password } = req.body;
 
       const findUserQuery = `
         SELECT email, password
         FROM users
-        WHERE email=${email} AND password=${password}
+        WHERE email=$1 AND password=$2
       `;
 
       const result = await db.query(findUserQuery, [email, password]);
-
+      console.log("login result", result);
       res.locals.user = result.rows[0];
       return next();
     } catch (err) {
