@@ -12,10 +12,10 @@ const userController = {
       // const newUser = await db.create(name, email, password);
 
       // const createQuery = `
-      //       INSERT INTO users
-      //       (name, email, password)
-      //       VALUES ($1, $2, $3)
-      //       RETURNING *;
+      // INSERT INTO users
+      // (name, email, password)
+      // VALUES ($1, $2, $3)
+      // RETURNING *;
       //   `;
 
       // const result = await db.query(createQuery, [name, email, password]);
@@ -36,7 +36,7 @@ const userController = {
       const findUserQuery = `
         SELECT email, password
         FROM users
-        WHERE email = $1 AND password = $2
+        WHERE email=${email} AND password=${password}
       `;
 
       const result = await db.query(findUserQuery, [email, password]);

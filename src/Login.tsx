@@ -32,7 +32,7 @@ function Login() {
     console.log("email", email, password);
 
     try {
-      const response = await fetch("/user", {
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,9 +43,9 @@ function Login() {
       // Check for success
       if (response.ok) {
         const data = await response.json();
-        console.log("Account successfully created", data);
+        console.log("Account signed in", data);
       } else {
-        console.error("Error creating account", response);
+        console.error("Error signing in.", response);
       }
     } catch (error) {
       console.error("Network error", error);

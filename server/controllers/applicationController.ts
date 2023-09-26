@@ -21,10 +21,10 @@ const applicationController = {
       // } = req.body;
       console.log("entering CreateApplication middleware: ReqBody: ", req.body);
       // const createQuery = `
-      //       INSERT INTO applications
-      //       (user_id, company_name, position, listing_link,notes,applied_date,status_id)
-      //       VALUES ($1, $2, $3, $4, $5, $6, $7)
-      //       RETURNING *;
+      // INSERT INTO applications
+      // (user_id, company_name, position, listing_link,notes,applied_date,status_id)
+      // VALUES ($1, $2, $3, $4, $5, $6, $7)
+      // RETURNING *;
       //   `;
 
       const result = await db.query("SELECT NOW()");

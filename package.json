@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --exec ts-node server/index.ts",
-    "dev": "concurrently --kill-others \"nodemon --exec ts-node --esm server/index.ts\"  \"vite\"",
+    "dev": "concurrently --kill-others \"nodemon --exec ts-node --esm server/index.ts\"  \"vite --port 5173\"",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
