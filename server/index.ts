@@ -1,4 +1,4 @@
-import express from "express"; //{ Request, Response }
+import express, { Request } from "express"; //{ Response }
 import cookieParser from "cookie-parser";
 // @ts-ignore
 import userRouter from "./routes/userRouter.ts";
@@ -7,10 +7,12 @@ import applicationRouter from "./routes/applicationRouter.ts";
 // @ts-ignore
 // import db from "./models/db.js";
 import ViteExpress from "vite-express";
+import cors from "cors";
 
-export const app = express();
+const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors<Request>());
 
 app.use("/login", userRouter);
 //app.use("/signup", userRouter);
@@ -25,7 +27,7 @@ app.use("/login", userRouter);
 // });
 
 app.use("/application", applicationRouter, (_, res) => {
-  return res.json("query sent through to database");
+  res.status(200).json("Successfully posted application");
 });
 
 // app.use((_: Request, res: Response) =>

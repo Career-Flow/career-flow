@@ -6,11 +6,12 @@ const applicationController = {
   // create application
   createApplication: async function (
     req: Request,
-    _: Response,
+    res: Response,
     next: NextFunction
   ) {
     try {
-      const { company_name, position, listing_link, notes } = req.body.jobData;
+      const { company_name, position, listing_link, notes, applied_date } =
+        req.body.jobData;
 
       const data = [
         "1",
@@ -18,7 +19,7 @@ const applicationController = {
         position,
         listing_link,
         notes,
-        new Date().toISOString(),
+        applied_date,
         1,
       ];
       console.log(data);
@@ -26,11 +27,9 @@ const applicationController = {
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
       `;
-      //console.log("Successfully executed query", result.rows[0]);
       const result = await db.query(createQuery, data);
-      console.log("result", result);
-      // res.locals.application = result.rows[0];
-      //console.log("made it to end of createUser", res.locals.user);
+      console.log("result", result.rows[0]);
+      res.locals.application = result.rows[0];
       return next();
     } catch (err) {
       console.error(
@@ -42,13 +41,13 @@ const applicationController = {
   },
 
   getApplications: async function (
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-      const { user_id } = req.body;
-      console.log("entering getApplications middleware user_id:", user_id);
+      const user_id = 1;
+      //console.log("entering getApplications middleware user_id:", req.body);
       const userIdQuery = `
       SELECT *
       FROM applications

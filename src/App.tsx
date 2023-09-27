@@ -74,44 +74,44 @@ function App() {
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
 
-  // useEffect(() => {
-  //   // fetch jobs from server
-  //   fetch("/application")
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       // res.forEach((newJob:JobData) => {
-  //       //   setJobs([...jobs, newJob]);
-  //       //   if(newJob.status === 'Not Applied')
+  useEffect(() => {
+    // fetch jobs from server
+    fetch("/application")
+      .then((res) => res.json())
+      .then((res) => {
+        // res.forEach((newJob:JobData) => {
+        //   setJobs([...jobs, newJob]);
+        //   if(newJob.status === 'Not Applied')
 
-  //       // })
-  //       setJobs(res);
+        // })
+        setJobs(res);
 
-  //       setnAJobs(() =>
-  //         res.filter((job: JobData) => job.status === "Not Applied")
-  //       );
+        setnAJobs(() =>
+          res.filter((job: JobData) => job.status === "Not Applied")
+        );
 
-  //       setIPJobs(() =>
-  //         res.filter(
-  //           (job: JobData) =>
-  //             job.status === "Applied" ||
-  //             job.status === "Interviewing" ||
-  //             job.status === "Waiting"
-  //         )
-  //       );
+        setIPJobs(() =>
+          res.filter(
+            (job: JobData) =>
+              job.status === "Applied" ||
+              job.status === "Interviewing" ||
+              job.status === "Waiting"
+          )
+        );
 
-  //       setResultJobs(() =>
-  //         res.filter(
-  //           (job: JobData) =>
-  //             job.status === "Rejected" ||
-  //             job.status === "Ghosted" ||
-  //             job.status === "Accepted"
-  //         )
-  //       );
-  //     })
-  //     .catch(() => {
-  //       console.log("no jobs yet");
-  //     });
-  // }, [jobs]);
+        setResultJobs(() =>
+          res.filter(
+            (job: JobData) =>
+              job.status === "Rejected" ||
+              job.status === "Ghosted" ||
+              job.status === "Accepted"
+          )
+        );
+      })
+      .catch(() => {
+        console.log("no jobs yet");
+      });
+  }, [jobs]);
 
   /*
   what comes out of the result object in onDragEnd?

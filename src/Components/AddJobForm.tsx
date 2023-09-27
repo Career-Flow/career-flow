@@ -24,6 +24,7 @@ const AddJobForm = ({ isOpen, onClose }) => {
     position: "",
     listing_link: "",
     notes: "",
+    applied_date: new Date().toISOString(),
   });
 
   //didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
