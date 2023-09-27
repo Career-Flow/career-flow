@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import db from "../models/db.ts";
 
 const userController = {
-  createUser: async function (req: Request, _: Response, next: NextFunction) {
+  async createUser(req: Request, _: Response, next: NextFunction) {
     console.log("entered createUser in userController", req.body);
     try {
       //const { name, email, password } = req.body;
@@ -28,7 +28,7 @@ const userController = {
     }
   },
 
-  verifyUser: async function (req: Request, res: Response, next: NextFunction) {
+  async verifyUser(req: Request, res: Response, next: NextFunction) {
     try {
       //console.log("userController req bdy", req.body);
       const { email, password } = req.body;

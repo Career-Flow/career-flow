@@ -4,10 +4,10 @@ import db from "../models/db.ts";
 
 const applicationController = {
   // create application
-  createApplication: async function (
+  async createApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const { company_name, position, listing_link, notes, applied_date } =
@@ -33,6 +33,8 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
+        'Error updating Application in ApplicationController createApplications middleware:',
+        err,
         "Error updating Application in ApplicationController createApplications middleware:",
         err
       );
@@ -43,7 +45,7 @@ const applicationController = {
   getApplications: async function (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const user_id = 1;
@@ -57,17 +59,17 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        "Error updating Application in ApplicationController getApplications middleware:",
-        err
+        'Error updating Application in ApplicationController getApplications middleware:',
+        err,
       );
       return next(err);
     }
   },
 
-  updateApplication: async function (
+  async updateApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const {
@@ -104,17 +106,17 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        "Error updating Application in ApplicationController updateApplication middleware:",
-        err
+        'Error updating Application in ApplicationController updateApplication middleware:',
+        err,
       );
       next(err);
     }
   },
 
-  deleteApplication: async function (
+  async deleteApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const { id } = req.body;
@@ -131,8 +133,8 @@ const applicationController = {
       return next();
     } catch (err) {
       console.error(
-        "Error updating Application in ApplicationController deleteApplication middleware:",
-        err
+        'Error updating Application in ApplicationController deleteApplication middleware:',
+        err,
       );
       next(err);
     }

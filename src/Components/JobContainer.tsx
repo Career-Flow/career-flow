@@ -41,7 +41,7 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
   };
 
   const handleDoubleClicked = (event) => {
-    if (event.detail == 2) {
+    if (event.detail === 2) {
       onOpen();
     }
   };
@@ -58,7 +58,6 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onDoubleClick={handleDoubleClicked}
-            w="100%"
             borderRadius="md"
             p="2.5"
             boxShadow="sm"

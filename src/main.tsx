@@ -2,9 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import App from "./App.tsx";
+import App from "./App";
 import Login from "./Components/Login";
-import Signup from "./Components/Signup";
 import "./index.css";
 
 const colors = {

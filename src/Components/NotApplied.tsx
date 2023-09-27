@@ -19,11 +19,12 @@ function NotApplied({ jobs }: { jobs: JobData[] }) {
 
   return (
     <Droppable droppableId="notapplied">
-      {(provided) => (
+      {(provided, snapshot) => (
         <Box
           w="100%"
-          h="78vh"
-          bg="#ededed"
+          h="100%"
+          bg={snapshot.isDraggingOver ? 'white' : '#ededed'}
+          transition="background-color 200ms ease"
           color="black"
           borderRadius="md"
           boxShadow="lg"

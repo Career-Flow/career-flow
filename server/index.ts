@@ -1,7 +1,7 @@
 import express, { Request } from "express"; //{ Response }
 import cookieParser from "cookie-parser";
 // @ts-ignore
-import userRouter from "./routes/userRouter.ts";
+import userRouter from './routes/userRouter.ts';
 // @ts-ignore
 import applicationRouter from "./routes/applicationRouter.ts";
 // @ts-ignore

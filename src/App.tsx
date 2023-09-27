@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
-import "./App.css";
-import { DragDropContext, OnDragEndResponder } from "@hello-pangea/dnd";
-import NotApplied from "./Components/NotApplied";
-import Inprogress from "./Components/Inprogress";
-import Done from "./Components/Done";
-import Reminders from "./Components/Reminders";
-import Navbar from "./Components/Navbar";
-import careerflowLogo from "./assets/careerflow.svg";
-import statuses, { statusSwitch } from "./Statuses";
-import { JobData } from "./Types";
+import { useState, useEffect } from 'react';
+import { Grid, GridItem } from '@chakra-ui/react';
+import './App.css';
+import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
+import NotApplied from './Components/NotApplied';
+import Inprogress from './Components/Inprogress';
+import Done from './Components/Done';
+import Reminders from './Components/Reminders';
+import Navbar from './Components/Navbar';
+import careerflowLogo from './assets/careerflow.svg';
+import statuses, { statusSwitch } from './Statuses';
+import { JobData } from './Types';
 
 const dummyData = [
   {
@@ -286,20 +286,20 @@ function App() {
               </Button>
               <Button colorScheme='blue' variant='outline'>Study Tab</Button>
             </ButtonGroup> */}
-        <img src={careerflowLogo} alt="logo" width="120vh" />
+        <img src={careerflowLogo} alt="logo" width="120vw" />
         <Navbar />
       </GridItem>
       <GridItem area="reminders">
         <Reminders />
       </GridItem>
       <DragDropContext onDragEnd={onDragEnd}>
-        <GridItem area="notapplied" maxW="30vw">
+        <GridItem area="notapplied" maxW="30vw" style={{ overflow: 'hidden' }}>
           <NotApplied jobs={nAJobs} />
         </GridItem>
-        <GridItem area="inprogress">
+        <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
           <Inprogress jobs={iPJobs} />
         </GridItem>
-        <GridItem area="done" maxW="30vw">
+        <GridItem area="done" maxW="30vw" style={{ overflow: 'hidden' }}>
           <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />
         </GridItem>
       </DragDropContext>
