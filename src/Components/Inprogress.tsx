@@ -12,11 +12,12 @@ function Inprogress({ jobs }: { jobs: JobData[] }) {
 
   return (
     <Droppable droppableId="inprogress">
-      {(provided) => (
+      {(provided, snapshot) => (
         <Box
           width="100%"
-          h="78vh"
-          bg="#ededed"
+          h="100%"
+          bg={snapshot.isDraggingOver ? 'white' : '#ededed'}
+          transition="background-color 200ms ease"
           color="black"
           borderRadius="md"
           boxShadow="lg"

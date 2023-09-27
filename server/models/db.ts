@@ -1,11 +1,12 @@
 import pkg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const { Pool } = pkg;
 
-const PG_URI =
-  'postgres://kgcavihy:b5mvCw3uLlyrOCquWW1qkPxatYKwYt3-@bubble.db.elephantsql.com/kgcavihy';
-
 const db = new Pool({
-  connectionString: PG_URI,
+  connectionString: process.env.PG_URI,
 });
 
 db.on('connect', () => {

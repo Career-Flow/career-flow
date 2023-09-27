@@ -22,4 +22,21 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-console': 'off',
   },
+  overrides: [
+    {
+      files: ['**/server/**/*.ts', '**/server/**/*.tsx'],
+      rules: {
+        'import/extensions': [
+          'error',
+          'ignorePackages',
+          {
+            'js': 'never',
+            'jsx': 'never',
+            'ts': 'always',
+            'tsx': 'always',
+          },
+        ],
+      },
+    },
+  ],
 }

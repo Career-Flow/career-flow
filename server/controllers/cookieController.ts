@@ -2,22 +2,23 @@ import { Response, NextFunction } from 'express';
 
 const cookieController = {
   // set cookie
-  setSSIDCookie: async function (
+  async setSSIDCookie(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     console.log('entering setSSIDCookie middleware', res.locals.user);
     // set cookie called ssid to user id after user has been authenticated
     // check if user id exists, if not call global error handler
     try {
-      if (!res.locals._id)
+      if (!res.locals._id) {
         return next({
           log: 'error in cookieController.setSSIDCookie',
           message: {
-            err: `Error user id undefined`,
+            err: 'Error user id undefined',
           },
         });
+      }
       const { _id } = res.locals.user;
       res.cookie('ssid', _id, {
         httpOnly: true,
@@ -28,16 +29,16 @@ const cookieController = {
       return next({
         log: 'error in cookieController.setSSIDCookie',
         message: {
-          err: `Error user id undefined`,
+          err: 'Error user id undefined',
         },
       });
     }
   },
   // delete cookie
-  deleteSSIDCookie: async function (
+  async deleteSSIDCookie(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       res.clearCookie('ssid');
@@ -46,7 +47,7 @@ const cookieController = {
       return next({
         log: 'error in cookieController.deleteSSIDCookie',
         message: {
-          err: `Error trying to delete SSID cookie`,
+          err: 'Error trying to delete SSID cookie',
         },
       });
     }

@@ -4,10 +4,10 @@ import db from '../models/db.ts';
 
 const applicationController = {
   // create application
-  createApplication: async function (
+  async createApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const {
@@ -43,16 +43,16 @@ const applicationController = {
     } catch (err) {
       console.error(
         'Error updating Application in ApplicationController createApplications middleware:',
-        err
+        err,
       );
       return next(err);
     }
   },
 
-  getApplications: async function (
+  async getApplications(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const { user_id } = req.body;
@@ -67,16 +67,16 @@ const applicationController = {
     } catch (err) {
       console.error(
         'Error updating Application in ApplicationController getApplications middleware:',
-        err
+        err,
       );
       return next(err);
     }
   },
 
-  updateApplication: async function (
+  async updateApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const {
@@ -114,16 +114,16 @@ const applicationController = {
     } catch (err) {
       console.error(
         'Error updating Application in ApplicationController updateApplication middleware:',
-        err
+        err,
       );
       next(err);
     }
   },
 
-  deleteApplication: async function (
+  async deleteApplication(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     try {
       const { id } = req.body;
@@ -141,7 +141,7 @@ const applicationController = {
     } catch (err) {
       console.error(
         'Error updating Application in ApplicationController deleteApplication middleware:',
-        err
+        err,
       );
       next(err);
     }
