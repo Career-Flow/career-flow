@@ -74,13 +74,6 @@ function App() {
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
 
-  useEffect(() => {
-    // Fetch data from the Express server
-    fetch("/api/test")
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error("Error:", err));
-  }, []);
   // useEffect(() => {
   //   // fetch jobs from server
   //   fetch("/application")

@@ -6,41 +6,31 @@ const applicationController = {
   // create application
   createApplication: async function (
     req: Request,
-    res: Response,
+    _: Response,
     next: NextFunction
   ) {
     try {
-      // const {
-      //   user_id,
-      //   company_name,
-      //   position,
-      //   listing_link,
-      //   notes,
-      //   applied_date,
-      //   status_id,
-      // } = req.body;
-      console.log("entering CreateApplication middleware: ReqBody: ", req.body);
-      // const createQuery = `
-      // INSERT INTO applications
-      // (user_id, company_name, position, listing_link,notes,applied_date,status_id)
-      // VALUES ($1, $2, $3, $4, $5, $6, $7)
-      // RETURNING *;
-      //   `;
+      const { company_name, position, listing_link, notes } = req.body.jobData;
 
-      const result = await db.query("SELECT NOW()");
-      console.log("Successfully executed query", result.rows[0]);
-      // const result = await db.query(createQuery, [
-      //   user_id,
-      //   company_name,
-      //   position,
-      //   listing_link,
-      //   notes,
-      //   applied_date,
-      //   status_id,
-      // ]);
-
+      const data = [
+        "1",
+        company_name,
+        position,
+        listing_link,
+        notes,
+        new Date().toISOString(),
+        1,
+      ];
+      console.log(data);
+      const createQuery = `INSERT INTO applications(user_id, company_name, position, listing_link, notes, applied_date, status_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *;
+      `;
+      //console.log("Successfully executed query", result.rows[0]);
+      const result = await db.query(createQuery, data);
+      console.log("result", result);
       // res.locals.application = result.rows[0];
-      console.log("made it to end of createUser", res.locals.user);
+      //console.log("made it to end of createUser", res.locals.user);
       return next();
     } catch (err) {
       console.error(

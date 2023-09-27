@@ -21,31 +21,33 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-function Login() {
+function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
   const handleShowClick = () => setShowPassword(!showPassword);
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("email", email, password);
+    console.log("email", email, password, name);
 
     try {
-      const response = await fetch("/login", {
+      const response = await fetch("/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, name }),
       });
 
       // Check for success
       if (response.ok) {
         const data = await response.json();
-        console.log("Account signed in", data);
+        console.log("Account signed up", data);
+        window.location.href = "/";
       } else {
-        console.error("Error signing in.", response);
+        console.error("Error signing up.", response);
       }
     } catch (error) {
       console.error("Network error", error);
@@ -67,8 +69,8 @@ function Login() {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Sign in!</Heading>
+        <Avatar bg="orange.500" />
+        <Heading color="orange.400">Sign up!</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form onSubmit={handleSubmit}>
             <Stack
@@ -81,13 +83,27 @@ function Login() {
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
+                    children={<CFaUserAlt color="orange.300" />}
                   />
                   <Input
                     type="email"
                     placeholder="email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                  />
+                </InputGroup>
+              </FormControl>
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement
+                    pointerEvents="none"
+                    children={<CFaUserAlt color="orange.300" />}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="username"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </InputGroup>
               </FormControl>
@@ -119,22 +135,22 @@ function Login() {
               borderRadius={0}
               type="submit"
               variant="solid"
-              colorScheme="teal"
+              colorScheme="orange"
               width="full"
             >
-              Sign in
+              Sign up with us!
             </Button>
           </form>
         </Box>
       </Stack>
       <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
+        Already have an account?{" "}
+        <Link color="orange.500" href="#">
+          Sign in
         </Link>
       </Box>
     </Flex>
   );
 }
 
-export default Login;
+export default Signup;

@@ -1,34 +1,32 @@
 import express from "express"; //{ Request, Response }
-import cors from "cors";
 import cookieParser from "cookie-parser";
 // @ts-ignore
 import userRouter from "./routes/userRouter.ts";
-// // @ts-ignore
-// import applicationRouter from "./routes/applicationRouter.ts";
+// @ts-ignore
+import applicationRouter from "./routes/applicationRouter.ts";
 // @ts-ignore
 // import db from "./models/db.js";
-export const app = express();
+import ViteExpress from "vite-express";
 
-app.use(cors());
+export const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", userRouter);
 
-app.get("/", () => console.log("hi"));
-
-app.get("/api/test", (_, res) => {
-  console.log("API Test route hit");
-  res.json({ message: "Server is connected" });
-});
+app.use("/login", userRouter);
+//app.use("/signup", userRouter);
 //app.use('/reminder', reminderRouter);
 
-app.use("/login", userRouter, (req, _) => {
-  console.log("user", req.body);
-});
-
-// app.use("/application", applicationRouter, (_, res) => {
-//   return res.json("query sent through to database");
+// app.use("/login", userRouter, (req, _) => {
+//   console.log("user", req.body);
 // });
+
+// app.use("/signup", (req, _) => {
+//   console.log("user", req.body);
+// });
+
+app.use("/application", applicationRouter, (_, res) => {
+  return res.json("query sent through to database");
+});
 
 // app.use((_: Request, res: Response) =>
 //   res.status(404).send("Page not found...")
@@ -45,8 +43,7 @@ app.use("/login", userRouter, (req, _) => {
 //   return res.status(errObj.status).json(errObj.message);
 // });
 
-app.listen(3000, () => console.log("Connected to the port 3000"));
-
+ViteExpress.listen(app, 3000, () => console.log("Server is listening..."));
 // if (!process.env['VITE']) {
 //   const frontendFiles = process.cwd() + '/dist';
 //   app.use(express.static(frontendFiles));
