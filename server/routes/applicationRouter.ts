@@ -14,7 +14,8 @@ router.post('/', applicationController.createApplication, (_, res) => res.status
 // get applications to populate 'done' display
 router.get('/', applicationController.getApplications, (_, res) => {
   console.log('application/');
-  return res.locals.applications;
+  // return res.locals.applications;
+  return res.status(200).json('testing');
 });
 
 router.delete('/', applicationController.deleteApplication, (_, res) => res.status(201).json(res.locals.application));
