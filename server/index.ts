@@ -11,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors<Request>());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/login', userRouter);
 // app.use("/signup", userRouter);
