@@ -74,36 +74,36 @@ function App() {
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
 
-  useEffect(() => {
-    // fetch jobs from server
-    fetch('/application')
-      .then((res) => res.json())
-      .then((res) => {
-        // res.forEach((newJob:JobData) => {
-        //   setJobs([...jobs, newJob]);
-        //   if(newJob.status === 'Not Applied')
+  // useEffect(() => {
+  //   // fetch jobs from server
+  //   fetch('/application')
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       // res.forEach((newJob:JobData) => {
+  //       //   setJobs([...jobs, newJob]);
+  //       //   if(newJob.status === 'Not Applied')
 
-        // })
-        setJobs(res);
+  //       // })
+  //       setJobs(res);
 
-        setnAJobs(() => res.filter((job: JobData) => job.status === 'Not Applied'));
+  //       setnAJobs(() => res.filter((job: JobData) => job.status === 'Not Applied'));
 
-        setIPJobs(() => res.filter(
-          (job: JobData) => job.status === 'Applied'
-              || job.status === 'Interviewing'
-              || job.status === 'Waiting',
-        ));
+  //       setIPJobs(() => res.filter(
+  //         (job: JobData) => job.status === 'Applied'
+  //             || job.status === 'Interviewing'
+  //             || job.status === 'Waiting',
+  //       ));
 
-        setResultJobs(() => res.filter(
-          (job: JobData) => job.status === 'Rejected'
-              || job.status === 'Ghosted'
-              || job.status === 'Accepted',
-        ));
-      })
-      .catch(() => {
-        console.log('no jobs yet');
-      });
-  }, [jobs]);
+  //       setResultJobs(() => res.filter(
+  //         (job: JobData) => job.status === 'Rejected'
+  //             || job.status === 'Ghosted'
+  //             || job.status === 'Accepted',
+  //       ));
+  //     })
+  //     .catch(() => {
+  //       console.log('no jobs yet');
+  //     });
+  // }, [jobs]);
 
   /*
   what comes out of the result object in onDragEnd?
@@ -148,6 +148,8 @@ function App() {
     const copyiPJobs = [...iPJobs];
     const copyResultJobs = [...resultJobs];
     const copyGhostedJobs = [...ghostedJobs];
+    let indexOffSet = 0;
+    if (destination.droppableId === source.droppableId) { indexOffSet += 1; }
 
     // alter the state of the destination columns for the moved job
     switch (destination.droppableId) {
@@ -156,7 +158,9 @@ function App() {
         setnAJobs(copynAJobs);
         break;
       case 'inprogress':
+        console.log('copyiPJobs in the switch before ', JSON.stringify(copyiPJobs));
         copyiPJobs.splice(destination.index, 0, temp);
+        console.log('copyiPJobs in the switch', JSON.stringify(copyiPJobs));
         setIPJobs(copyiPJobs);
         break;
       case 'result':
@@ -174,19 +178,19 @@ function App() {
     // remove the moved job from the originating column
     switch (source.droppableId) {
       case 'notapplied':
-        copynAJobs.splice(source.index, 1);
+        copynAJobs.splice(source.index + indexOffSet, 1);
         setnAJobs(copynAJobs);
         break;
       case 'inprogress':
-        copyiPJobs.splice(source.index, 1);
+        copyiPJobs.splice(source.index + indexOffSet, 1);
         setIPJobs(copyiPJobs);
         break;
       case 'result':
-        copyResultJobs.splice(source.index, 1);
+        copyResultJobs.splice(source.index + indexOffSet, 1);
         setResultJobs(copyResultJobs);
         break;
       case 'ghosted':
-        copyGhostedJobs.splice(source.index, 1);
+        copyGhostedJobs.splice(source.index + indexOffSet, 1);
         setGhostedJobs(copyGhostedJobs);
         break;
       default:
