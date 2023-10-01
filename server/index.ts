@@ -26,7 +26,7 @@ app.use("/login", userRouter);
 //   console.log("user", req.body);
 // });
 
-app.use("/application", applicationRouter, (_, res) => {
+app.use("/api", applicationRouter, (_, res) => {
   res.status(200).json("Successfully posted application");
 });
 
