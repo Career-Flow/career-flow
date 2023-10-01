@@ -1,5 +1,4 @@
 import express from 'express';
-// @ts-ignore
 import applicationController from '../controllers/applicationController.ts';
 // import sessionController from "../controllers/sessionController";
 
@@ -13,9 +12,9 @@ router.post('/', applicationController.createApplication, (_, res) => res.status
 // get applications to populate 'in progress' display
 // get applications to populate 'done' display
 router.get('/', applicationController.getApplications, (_, res) => {
-  console.log('application/');
+  console.log('api/');
   // return res.locals.applications;
-  return res.status(200).json('testing');
+  return res.status(200).json(res.locals.applications);
 });
 
 router.delete('/', applicationController.deleteApplication, (_, res) => res.status(201).json(res.locals.application));
