@@ -1,36 +1,51 @@
-import express, { Request, Response } from 'express';
-import cookieParser from 'cookie-parser';
+import express, { Request } from "express"; //{ Response }
+import cookieParser from "cookie-parser";
 // @ts-ignore
 import userRouter from './routes/userRouter.ts';
 // @ts-ignore
-import applicationRouter from './routes/applicationRouter.ts';
+import applicationRouter from "./routes/applicationRouter.ts";
+// @ts-ignore
+// import db from "./models/db.js";
+import ViteExpress from "vite-express";
+import cors from "cors";
 
-export const app = express();
-
+const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors<Request>());
 
-app.get('/api/test', (_, res: Response) => res.json({ greeting: 'jordan is the worst!' }));
+app.use("/login", userRouter);
+//app.use("/signup", userRouter);
+//app.use('/reminder', reminderRouter);
 
-// app.use('/reminder', reminderRouter);
-app.use('/user', userRouter);
-app.use('/api/application', applicationRouter);
+// app.use("/login", userRouter, (req, _) => {
+//   console.log("user", req.body);
+// });
 
-app.use((_: Request, res: Response) => res.status(404).send('Page not found...'));
+// app.use("/signup", (req, _) => {
+//   console.log("user", req.body);
+// });
 
-app.use((err: Error, _: Request, res: Response) => {
-  const defaultErr = {
-    log: 'Express error handler caught unknown middleware error',
-    status: 500,
-    message: { err: 'An error occurred' },
-  };
-  const errObj = { ...defaultErr, ...err };
-  console.log(errObj.log);
-  return res.status(errObj.status).json(errObj.message);
+app.use("/application", applicationRouter, (_, res) => {
+  res.status(200).json("Successfully posted application");
 });
 
-app.listen(3000);
+// app.use((_: Request, res: Response) =>
+//   res.status(404).send("Page not found...")
+// );
 
+// app.use((err: Error, _: Request, res: Response) => {
+//   const defaultErr = {
+//     log: "Express error handler caught unknown middleware error",
+//     status: 500,
+//     message: { err: "An error occurred" },
+//   };
+//   const errObj = Object.assign({}, defaultErr, err);
+//   console.log(errObj.log);
+//   return res.status(errObj.status).json(errObj.message);
+// });
+
+ViteExpress.listen(app, 3000, () => console.log("Server is listening..."));
 // if (!process.env['VITE']) {
 //   const frontendFiles = process.cwd() + '/dist';
 //   app.use(express.static(frontendFiles));

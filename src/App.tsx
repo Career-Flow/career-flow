@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Grid, GridItem } from '@chakra-ui/react';
 import './App.css';
-import { BeforeCapture, DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
+import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
 import NotApplied from './Components/NotApplied';
 import Inprogress from './Components/Inprogress';
 import Done from './Components/Done';
@@ -13,49 +13,55 @@ import { JobData } from './Types';
 
 const dummyData = [
   {
-    user_id: '123456',
-    app_id: '1234567',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
+    user_id: "123456",
+    app_id: "1234567",
+    company_name: "test1",
+    position: "some job",
+    listing_link: "some link",
+    notes: "got money?",
     applied_date: new Date(),
     last_updated: new Date(),
-    status: 'Not Applied',
-    reminders: [{
-      reminderDate: new Date(),
-      reminderType: '',
-    }],
+    status: "Not Applied",
+    reminders: [
+      {
+        reminderDate: new Date(),
+        reminderType: "",
+      },
+    ],
   },
   {
-    user_id: '234567',
-    app_id: '2345678',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
+    user_id: "234567",
+    app_id: "2345678",
+    company_name: "test1",
+    position: "some job",
+    listing_link: "some link",
+    notes: "got money?",
     applied_date: new Date(),
     last_updated: new Date(),
-    status: 'Interviewing',
-    reminders: [{
-      reminderDate: new Date(),
-      reminderType: '',
-    }],
+    status: "Interviewing",
+    reminders: [
+      {
+        reminderDate: new Date(),
+        reminderType: "",
+      },
+    ],
   },
   {
-    user_id: '345678',
-    app_id: '3456789',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
+    user_id: "345678",
+    app_id: "3456789",
+    company_name: "test1",
+    position: "some job",
+    listing_link: "some link",
+    notes: "got money?",
     applied_date: new Date(),
     last_updated: new Date(),
-    status: 'Applied',
-    reminders: [{
-      reminderDate: new Date(),
-      reminderType: '',
-    }],
+    status: "Applied",
+    reminders: [
+      {
+        reminderDate: new Date(),
+        reminderType: "",
+      },
+    ],
   },
 ];
 
@@ -70,7 +76,7 @@ function App() {
 
   useEffect(() => {
     // fetch jobs from server
-    fetch('/application')
+    fetch("/application")
       .then((res) => res.json())
       .then((res) => {
         // res.forEach((newJob:JobData) => {
@@ -80,14 +86,30 @@ function App() {
         // })
         setJobs(res);
 
-        setnAJobs(() => res.filter((job: JobData) => job.status === 'Not Applied'));
+        setnAJobs(() =>
+          res.filter((job: JobData) => job.status === "Not Applied")
+        );
 
-        setIPJobs(() => res.filter((job: JobData) => job.status === 'Applied' || job.status === 'Interviewing' || job.status === 'Waiting'));
+        setIPJobs(() =>
+          res.filter(
+            (job: JobData) =>
+              job.status === "Applied" ||
+              job.status === "Interviewing" ||
+              job.status === "Waiting"
+          )
+        );
 
-        setResultJobs(() => res.filter((job: JobData) => job.status === 'Rejected' || job.status === 'Ghosted' || job.status === 'Accepted'));
+        setResultJobs(() =>
+          res.filter(
+            (job: JobData) =>
+              job.status === "Rejected" ||
+              job.status === "Ghosted" ||
+              job.status === "Accepted"
+          )
+        );
       })
       .catch(() => {
-        console.log('no jobs yet');
+        console.log("no jobs yet");
       });
   }, [jobs]);
 
@@ -108,23 +130,27 @@ function App() {
   */
 
   useEffect(() => {
-    console.log('nAJobs', nAJobs);
-    console.log('iPJobs', iPJobs);
-    console.log('doneJobs', resultJobs);
+    console.log("nAJobs", nAJobs);
+    console.log("iPJobs", iPJobs);
+    console.log("doneJobs", resultJobs);
   }, [nAJobs, iPJobs, resultJobs]);
 
   // type for the source and destination objects from the dnd result
   type SourceOrDest = {
-    droppableId: string,
-    index: number
+    droppableId: string;
+    index: number;
   };
 
-  const updateStateAndSet = (job:JobData, source: SourceOrDest, destination:SourceOrDest) => {
+  const updateStateAndSet = (
+    job: JobData,
+    source: SourceOrDest,
+    destination: SourceOrDest
+  ) => {
     // make a copy of the job
     // switch the status from the source status to the destination column status
     const temp = { ...job };
     temp.status = statusSwitch(destination.droppableId);
-    console.log('after switch temp.status', temp.status);
+    console.log("after switch temp.status", temp.status);
     // make copies of all the states
     const copynAJobs = [...nAJobs];
     const copyiPJobs = [...iPJobs];
@@ -133,19 +159,19 @@ function App() {
 
     // alter the state of the destination columns for the moved job
     switch (destination.droppableId) {
-      case 'notapplied':
+      case "notapplied":
         copynAJobs.splice(destination.index, 0, temp);
         setnAJobs(copynAJobs);
         break;
-      case 'inprogress':
+      case "inprogress":
         copyiPJobs.splice(destination.index, 0, temp);
         setIPJobs(copyiPJobs);
         break;
-      case 'result':
+      case "result":
         copyResultJobs.splice(destination.index, 0, temp);
         setResultJobs(copyResultJobs);
         break;
-      case 'ghosted':
+      case "ghosted":
         copyGhostedJobs.splice(destination.index, 0, temp);
         setGhostedJobs(copyGhostedJobs);
         break;
@@ -155,19 +181,19 @@ function App() {
 
     // remove the moved job from the originating column
     switch (source.droppableId) {
-      case 'notapplied':
+      case "notapplied":
         copynAJobs.splice(source.index, 1);
         setnAJobs(copynAJobs);
         break;
-      case 'inprogress':
+      case "inprogress":
         copyiPJobs.splice(source.index, 1);
         setIPJobs(copyiPJobs);
         break;
-      case 'result':
+      case "result":
         copyResultJobs.splice(source.index, 1);
         setResultJobs(copyResultJobs);
         break;
-      case 'ghosted':
+      case "ghosted":
         copyGhostedJobs.splice(source.index, 1);
         setGhostedJobs(copyGhostedJobs);
         break;
@@ -178,23 +204,23 @@ function App() {
 
   const onDragEnd: OnDragEndResponder = (result) => {
     const { destination, source, draggableId } = result; // drag info for the active job
-    console.log('dest', destination);
-    console.log('source', source);
-    console.log('draggableId', draggableId);
+    console.log("dest", destination);
+    console.log("source", source);
+    console.log("draggableId", draggableId);
     // if dragged outside of the droppable areas or if dragged back to the same spot, just return
     if (
-      !destination
-      || (destination.droppableId === source.droppableId
-        && destination.index === source.index)
+      !destination ||
+      (destination.droppableId === source.droppableId &&
+        destination.index === source.index)
     ) {
-      console.log('returned out of onDragEnd');
+      console.log("returned out of onDragEnd");
       return;
     }
     // after dropping we need to change the status of the item that was dragged
     // Also rearrange the order in the respective array
 
-    if (source.droppableId === 'notapplied') {
-      console.log('source was notapplied');
+    if (source.droppableId === "notapplied") {
+      console.log("source was notapplied");
       nAJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
@@ -202,8 +228,8 @@ function App() {
           updateStateAndSet(job, source, destination);
         }
       });
-    } else if (source.droppableId === 'inprogress') {
-      console.log('source was inprogress');
+    } else if (source.droppableId === "inprogress") {
+      console.log("source was inprogress");
       iPJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
@@ -211,8 +237,8 @@ function App() {
           updateStateAndSet(job, source, destination);
         }
       });
-    } else if (source.droppableId === 'result') {
-      console.log('source was result');
+    } else if (source.droppableId === "result") {
+      console.log("source was result");
       resultJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {
@@ -220,8 +246,8 @@ function App() {
           updateStateAndSet(job, source, destination);
         }
       });
-    } else if (source.droppableId === 'ghosted') {
-      console.log('source was ghosted');
+    } else if (source.droppableId === "ghosted") {
+      console.log("source was ghosted");
       ghostedJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (job.app_id === result.draggableId) {

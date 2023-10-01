@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 // @ts-ignore
-import db from '../models/db.ts';
+import db from "../models/db.ts";
 
 const applicationController = {
   // create application
@@ -10,53 +10,46 @@ const applicationController = {
     next: NextFunction,
   ) {
     try {
-      const {
-        user_id,
+      const { company_name, position, listing_link, notes, applied_date } =
+        req.body.jobData;
+
+      const data = [
+        "1",
         company_name,
         position,
         listing_link,
         notes,
         applied_date,
-        status_id,
-      } = req.body;
-      console.log('entering CreateApplication middleware: ReqBody: ', req.body);
-      const createQuery = `
-            INSERT INTO applications
-            (user_id, company_name, position, listing_link,notes,applied_date,status_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING *;
-        `;
-
-      const result = await db.query(createQuery, [
-        user_id,
-        company_name,
-        position,
-        listing_link,
-        notes,
-        applied_date,
-        status_id,
-      ]);
-
+        1,
+      ];
+      console.log(data);
+      const createQuery = `INSERT INTO applications(user_id, company_name, position, listing_link, notes, applied_date, status_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *;
+      `;
+      const result = await db.query(createQuery, data);
+      console.log("result", result.rows[0]);
       res.locals.application = result.rows[0];
-      console.log('made it to end of createUser', res.locals.user);
       return next();
     } catch (err) {
       console.error(
         'Error updating Application in ApplicationController createApplications middleware:',
         err,
+        "Error updating Application in ApplicationController createApplications middleware:",
+        err
       );
       return next(err);
     }
   },
 
-  async getApplications(
-    req: Request,
+  getApplications: async function (
+    _: Request,
     res: Response,
     next: NextFunction,
   ) {
     try {
-      const { user_id } = req.body;
-      console.log('entering getApplications middleware user_id:', user_id);
+      const user_id = 1;
+      //console.log("entering getApplications middleware user_id:", req.body);
       const userIdQuery = `
       SELECT *
       FROM applications
@@ -90,7 +83,7 @@ const applicationController = {
         status_id,
         id,
       } = req.body;
-      console.log('entering updateApplication middleware req.body: ', req.body);
+      console.log("entering updateApplication middleware req.body: ", req.body);
       const updateQuery = `
       UPDATE applications
       SET ( user_id, company_name, position, listing_link, notes, applied_date, last_updated,status_id ) = ( $1, $2, $3, $4, $5, $6, $7, $8)
@@ -127,7 +120,7 @@ const applicationController = {
   ) {
     try {
       const { id } = req.body;
-      console.log('entering deleteApplication middleware: ID:', id);
+      console.log("entering deleteApplication middleware: ID:", id);
 
       const deleteQuery = `
       DELETE FROM applications
