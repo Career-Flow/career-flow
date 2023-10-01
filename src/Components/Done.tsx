@@ -51,9 +51,9 @@ function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs:
         )}
       </Droppable>
       <Droppable droppableId="ghosted">
-        {(provided, snapshot) => (
+        {(provided) => (
           <>
-            {setDraggingOverGhosted(snapshot.isDraggingOver)}
+            {/* {setDraggingOverGhosted(snapshot.isDraggingOver)} */}
             <p style={{ margin: '5px 0' }}>👻 Ghosted</p>
             <div ref={provided.innerRef} {...provided.droppableProps} style={{ height: '30%', overflowY: 'auto', overflowX: 'hidden' }}>
               {ghostedJobList}
