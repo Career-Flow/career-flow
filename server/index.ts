@@ -4,6 +4,7 @@ import ViteExpress from 'vite-express';
 import cors from 'cors';
 import userRouter from './routes/userRouter.ts';
 import applicationRouter from './routes/applicationRouter.ts';
+
 // import db from "./models/db.js";
 
 const PORT = 3000;

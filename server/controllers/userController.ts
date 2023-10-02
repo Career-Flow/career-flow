@@ -17,8 +17,8 @@ const userController = {
       const hash = await bcrypt.hash(password, saltRounds); // Wait for bcrypt.hash to complete
       const result = await db.query(createQuery, [name, email, hash]);
       const [user] = result.rows;
+
       res.locals.user = user;
-      return next();
       return next();
     } catch (err) {
       console.error('Error creating user:', err);

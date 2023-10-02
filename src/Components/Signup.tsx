@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -10,7 +10,6 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
@@ -29,6 +28,7 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   const handleShowClick = () => setShowPassword(!showPassword);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -48,7 +48,7 @@ function Signup() {
       if (response.ok) {
         const data = await response.json();
         console.log('Account signed up', data);
-        // window.location.href = '/';
+        navigate('/', { replace: true });
       } else {
         console.error('Error signing up.', response);
       }

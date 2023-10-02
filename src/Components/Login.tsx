@@ -1,4 +1,5 @@
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -9,16 +10,14 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
   InputLeftAddon,
 } from '@chakra-ui/react';
-import { FaUserAlt, FaLock } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import careerflowLogo from '../assets/careerflow.svg';
-import Signup from './Signup';
 
 const CFaLock = chakra(FaLock);
 const CMdEmail = chakra(MdEmail);
@@ -27,6 +26,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleShowClick = () => setShowPassword(!showPassword);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -47,6 +47,7 @@ function Login() {
         const data = await response.json();
         console.log('Account signed in', data);
         // window.location.href = '/';
+        navigate('/', { replace: true });
       } else {
         console.error('Error signing in.', response);
       }

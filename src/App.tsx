@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Grid, GridItem } from '@chakra-ui/react';
 import './App.css';
 import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
@@ -73,6 +74,26 @@ function App() {
   const [iPJobs, setIPJobs] = useState<JobData[]>([dummyData[1], dummyData[2]]);
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('/api', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    }
+    try {
+      fetchData();
+    } catch (err) {
+      console.log(`no jobs yet ${err}`);
+    }
+  }, []);
 
   // useEffect(() => {
   //   // fetch jobs from server
@@ -275,30 +296,34 @@ function App() {
       p="5"
       h="100vh"
     >
-      <GridItem area="tabs" display="flex" justifyContent="space-between">
-        {/* <ButtonGroup spacing='6' m={2}>
+      {loggedIn ? (
+        <>
+          <GridItem area="tabs" display="flex" justifyContent="space-between">
+            {/* <ButtonGroup spacing='6' m={2}>
               <Button style={{ width: '10vh' }} variant='unstyled'>
               <img src={Logo} alt="Logo" width='100vh'/>
               </Button>
               <Button colorScheme='blue' variant='outline'>Study Tab</Button>
             </ButtonGroup> */}
-        <img src={careerflowLogo} alt="logo" width="120vw" />
-        <Navbar />
-      </GridItem>
-      <GridItem area="reminders">
-        <Reminders />
-      </GridItem>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <GridItem area="notapplied" maxW="30vw" style={{ overflow: 'hidden' }}>
-          <NotApplied jobs={nAJobs} />
-        </GridItem>
-        <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
-          <Inprogress jobs={iPJobs} />
-        </GridItem>
-        <GridItem area="done" maxW="30vw" style={{ overflow: 'hidden' }}>
-          <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />
-        </GridItem>
-      </DragDropContext>
+            <img src={careerflowLogo} alt="logo" width="120vw" />
+            <Navbar />
+          </GridItem>
+          <GridItem area="reminders">
+            <Reminders />
+          </GridItem>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <GridItem area="notapplied" maxW="30vw" style={{ overflow: 'hidden' }}>
+              <NotApplied jobs={nAJobs} />
+            </GridItem>
+            <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
+              <Inprogress jobs={iPJobs} />
+            </GridItem>
+            <GridItem area="done" maxW="30vw" style={{ overflow: 'hidden' }}>
+              <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />
+            </GridItem>
+          </DragDropContext>
+        </>
+      ) : <Navigate to="/login" replace />}
     </Grid>
   );
 }

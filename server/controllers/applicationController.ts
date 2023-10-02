@@ -47,7 +47,7 @@ const applicationController = {
     next: NextFunction,
   ) {
     try {
-      const user_id = 1;
+      const user_id = res.locals.userId;
       // console.log("entering getApplications middleware user_id:", req.body);
       const userIdQuery = `
       SELECT *

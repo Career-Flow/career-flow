@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 import userController from '../controllers/userController.ts';
 // import sessionController from "../controllers/sessionController.ts";
-// import cookieController from '../controllers/cookieController.ts';
+import cookieController from '../controllers/cookieController.ts';
 
 const userRouter = express.Router();
 
@@ -9,7 +9,7 @@ const userRouter = express.Router();
 userRouter.post(
   '/signup',
   userController.createUser,
-  // cookieController.setSSIDCookie,
+  cookieController.setSSIDCookie,
   (_, res: Response) => res.status(201).json(res.locals.user),
 );
 
@@ -17,7 +17,7 @@ userRouter.post(
 userRouter.post(
   '/login',
   userController.verifyUser,
-  // cookieController.setSSIDCookie,
+  cookieController.setSSIDCookie,
   (_, res: Response) => res.status(200).json(res.locals.user),
 );
 
