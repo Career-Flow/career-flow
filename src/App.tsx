@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Grid, GridItem } from '@chakra-ui/react';
@@ -74,8 +75,7 @@ function App() {
   const [iPJobs, setIPJobs] = useState<JobData[]>([dummyData[1], dummyData[2]]);
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-
+  const [loggedIn, setLoggedIn] = useState<null | boolean>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -86,7 +86,10 @@ function App() {
         },
       });
       const data = await response.json();
-      console.log(data);
+      // if you get an array back, empty or with data, set true
+      // if data doesn't exist, redirect user back to login
+      if (Array.isArray(data)) setLoggedIn(true); else setLoggedIn(false);
+      console.log(data, '-----------');
     }
     try {
       fetchData();
@@ -296,7 +299,7 @@ function App() {
       p="5"
       h="100vh"
     >
-      {loggedIn ? (
+      { loggedIn ? (
         <>
           <GridItem area="tabs" display="flex" justifyContent="space-between">
             {/* <ButtonGroup spacing='6' m={2}>
@@ -323,7 +326,9 @@ function App() {
             </GridItem>
           </DragDropContext>
         </>
-      ) : <Navigate to="/login" replace />}
+      ) : loggedIn === false ? (
+        <Navigate to="/login" replace />
+      ) : null}
     </Grid>
   );
 }

@@ -30,7 +30,8 @@ const applicationController = {
       `;
       const result = await db.query(createQuery, data);
       console.log('result', result.rows[0]);
-      res.locals.application = result.rows[0];
+      const [application] = result.rows;
+      res.locals.application = application;
       return next();
     } catch (err) {
       console.error(
@@ -100,7 +101,8 @@ const applicationController = {
         status_id,
         id,
       ]);
-      res.locals.application = results.rows[0];
+      const [application] = results.rows;
+      res.locals.application = application;
 
       return next();
     } catch (err) {
@@ -127,7 +129,8 @@ const applicationController = {
       RETURNING *;
     `;
       const results = await db.query(deleteQuery, [id]);
-      res.locals.application = results.rows[0];
+      const [application] = results.rows;
+      res.locals.application = application;
 
       return next();
     } catch (err) {
