@@ -36,8 +36,6 @@ const applicationController = {
       console.error(
         'Error updating Application in ApplicationController createApplications middleware:',
         err,
-        'Error updating Application in ApplicationController createApplications middleware:',
-        err,
       );
       return next(err);
     }

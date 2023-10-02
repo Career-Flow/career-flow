@@ -20,6 +20,11 @@ userRouter.post(
   // cookieController.setSSIDCookie,
   (_, res: Response) => res.status(200).json(res.locals.user),
 );
+
+userRouter.get(
+  '/',
+  (_, res: Response) => res.status(200).json('TEST'),
+);
 // cookie parser
 // bycrypt? jwt?
 
