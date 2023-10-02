@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-// import db from '../models/db';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import db from '../models/db.ts';
 
 const sessionController = {
   // start session
@@ -30,14 +31,40 @@ const sessionController = {
   // },
   // isLoggedIn
   async isLoggedIn(req: Request, res: Response, next: NextFunction) {
-    if (req.cookies.SSID === undefined) {
+    // if (req.cookies.SSID === undefined) {
+    //   return next({
+    //     status: 403,
+    //     message: 'You are not logged in.',
+    //   });
+    // }
+
+    try {
+      const token = req.cookies.ssid;
+      console.log('token on sessionCon', token);
+      if (!process.env.TOKEN_KEY) {
+        throw new Error('TOKEN_KEY environment variable is not defined');
+      }
+      const decoded = jwt.verify(token, process.env.TOKEN_KEY) as JwtPayload;
+      console.log(decoded.email);
+      const createQuery = `
+      SELECT *
+      FROM users
+      WHERE email=$1`;
+      const result = await db.query(createQuery, [decoded.email]);
+      if (!result.rows[0]) { throw new Error('User not found in db based on JWT'); }
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { _id } = result.rows[0];
+      res.locals.userId = _id;
+      console.log(res.locals.userId);
+      return next();
+    } catch (err) {
       return next({
-        status: 403,
-        message: 'You are not logged in.',
+        log: `error in sessionController.isLoggedIn: ${err}`,
+        message: {
+          err: `Error user not logged in: ${err}`,
+        },
       });
     }
-
-    return next();
   },
 
 };

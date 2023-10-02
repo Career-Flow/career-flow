@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -7,35 +7,37 @@ import {
   Button,
   InputGroup,
   Stack,
-  InputLeftElement,
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
-} from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+  InputLeftAddon,
+} from '@chakra-ui/react';
+import { FaLock } from 'react-icons/fa';
+import { MdEmail } from 'react-icons/md';
+import careerflowLogo from '../assets/careerflow.svg';
 
-const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
+const CMdEmail = chakra(MdEmail);
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleShowClick = () => setShowPassword(!showPassword);
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("email", email, password);
+    console.log('email', email, password);
 
     try {
-      const response = await fetch("/login", {
-        method: "POST",
+      const response = await fetch('/auth/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
@@ -43,13 +45,14 @@ function Login() {
       // Check for success
       if (response.ok) {
         const data = await response.json();
-        console.log("Account signed in", data);
-        window.location.href = "/";
+        console.log('Account signed in', data);
+        // window.location.href = '/';
+        navigate('/', { replace: true });
       } else {
-        console.error("Error signing in.", response);
+        console.error('Error signing in.', response);
       }
     } catch (error) {
-      console.error("Network error", error);
+      console.error('Network error', error);
     }
   };
 
@@ -68,9 +71,10 @@ function Login() {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
+        {/* <Avatar bg="teal.500" /> */}
+        <img src={careerflowLogo} alt="logo" />
         <Heading color="teal.400">Sign in!</Heading>
-        <Box minW={{ base: "90%", md: "468px" }}>
+        <Box minW={{ base: '90%', md: '468px' }}>
           <form onSubmit={handleSubmit}>
             <Stack
               spacing={4}
@@ -80,10 +84,12 @@ function Login() {
             >
               <FormControl>
                 <InputGroup>
-                  <InputLeftElement
+                  <InputLeftAddon
                     pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
-                  />
+                  >
+                    <CMdEmail color="gray.300" />
+
+                  </InputLeftAddon>
                   <Input
                     type="email"
                     placeholder="email address"
@@ -94,20 +100,22 @@ function Login() {
               </FormControl>
               <FormControl>
                 <InputGroup>
-                  <InputLeftElement
+                  <InputLeftAddon
                     pointerEvents="none"
                     color="gray.300"
-                    children={<CFaLock color="orange.300" />}
-                  />
+                  >
+                    <CFaLock color="gray.300" />
+
+                  </InputLeftAddon>
                   <Input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? 'Hide' : 'Show'}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -129,8 +137,9 @@ function Login() {
         </Box>
       </Stack>
       <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
+        New to us?
+        {' '}
+        <Link href="/signup" color="teal.500">
           Sign Up
         </Link>
       </Box>

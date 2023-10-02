@@ -1,22 +1,22 @@
-import express, { Request } from "express"; //{ Response }
-import cookieParser from "cookie-parser";
-// @ts-ignore
+import express, { Request, Response, NextFunction } from 'express'; // { Response }
+import cookieParser from 'cookie-parser';
+import ViteExpress from 'vite-express';
+import cors from 'cors';
 import userRouter from './routes/userRouter.ts';
-// @ts-ignore
-import applicationRouter from "./routes/applicationRouter.ts";
-// @ts-ignore
-// import db from "./models/db.js";
-import ViteExpress from "vite-express";
-import cors from "cors";
+import applicationRouter from './routes/applicationRouter.ts';
 
+// import db from "./models/db.js";
+
+const PORT = 3000;
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors<Request>());
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/login", userRouter);
-//app.use("/signup", userRouter);
-//app.use('/reminder', reminderRouter);
+app.use('/auth', userRouter);
+// app.use("/signup", userRouter);
+// app.use('/reminder', reminderRouter);
 
 // app.use("/login", userRouter, (req, _) => {
 //   console.log("user", req.body);
@@ -26,26 +26,23 @@ app.use("/login", userRouter);
 //   console.log("user", req.body);
 // });
 
-app.use("/application", applicationRouter, (_, res) => {
-  res.status(200).json("Successfully posted application");
+app.use('/api', applicationRouter);
+
+app.use((_: Request, res: Response) => res.status(404).send('Page not found...'));
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use('/', (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    status: 400,
+    message: { err: 'An error occurred' },
+  };
+  const errorObj = { ...defaultErr, ...err };
+  console.error(errorObj.log);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
-// app.use((_: Request, res: Response) =>
-//   res.status(404).send("Page not found...")
-// );
-
-// app.use((err: Error, _: Request, res: Response) => {
-//   const defaultErr = {
-//     log: "Express error handler caught unknown middleware error",
-//     status: 500,
-//     message: { err: "An error occurred" },
-//   };
-//   const errObj = Object.assign({}, defaultErr, err);
-//   console.log(errObj.log);
-//   return res.status(errObj.status).json(errObj.message);
-// });
-
-ViteExpress.listen(app, 3000, () => console.log("Server is listening..."));
+ViteExpress.listen(app, PORT, () => console.log(`Server is listening...PORT: ${PORT}`));
 // if (!process.env['VITE']) {
 //   const frontendFiles = process.cwd() + '/dist';
 //   app.use(express.static(frontendFiles));

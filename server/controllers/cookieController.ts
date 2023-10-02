@@ -1,9 +1,10 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
 const cookieController = {
   // set cookie
   async setSSIDCookie(
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction,
   ) {
@@ -11,16 +12,30 @@ const cookieController = {
     // set cookie called ssid to user id after user has been authenticated
     // check if user id exists, if not call global error handler
     try {
-      if (!res.locals._id) {
+      if (!res.locals.user) {
         return next({
           log: 'error in cookieController.setSSIDCookie',
           message: {
-            err: 'Error user id undefined',
+            err: 'Error user undefined',
           },
         });
       }
-      const { _id } = res.locals.user;
-      res.cookie('ssid', _id, {
+      const { email } = res.locals.user;
+      // for typescript edge case coverage when TOKEN_KEY is null
+      if (!process.env.TOKEN_KEY) {
+        throw new Error('TOKEN_KEY environment variable is not defined');
+      }
+      // creating JWT
+      const token = jwt.sign(
+        { email },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: '2h',
+        },
+      );
+      // passing JWT as cookie data
+      res.cookie('ssid', token, {
+        maxAge: 1000 * 60 * 60 * 2, // 2 hours
         httpOnly: true,
       });
       console.log('reached the end of setSSIDCookie');
@@ -36,7 +51,7 @@ const cookieController = {
   },
   // delete cookie
   async deleteSSIDCookie(
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction,
   ) {

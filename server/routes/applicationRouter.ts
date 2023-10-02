@@ -1,7 +1,6 @@
 import express from 'express';
-// @ts-ignore
 import applicationController from '../controllers/applicationController.ts';
-// import sessionController from "../controllers/sessionController";
+import sessionController from '../controllers/sessionController.ts';
 
 const router = express.Router();
 
@@ -12,10 +11,7 @@ router.post('/', applicationController.createApplication, (_, res) => res.status
 // get applications to populate 'not applied' display
 // get applications to populate 'in progress' display
 // get applications to populate 'done' display
-router.get('/', applicationController.getApplications, (_, res) => {
-  console.log('application/');
-  return res.locals.applications;
-});
+router.get('/', sessionController.isLoggedIn, applicationController.getApplications, (_, res) => res.status(200).json(res.locals.applications));
 
 router.delete('/', applicationController.deleteApplication, (_, res) => res.status(201).json(res.locals.application));
 // update application (PATCH)

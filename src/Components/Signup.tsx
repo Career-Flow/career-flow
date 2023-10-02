@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Heading,
@@ -7,50 +7,53 @@ import {
   Button,
   InputGroup,
   Stack,
-  InputLeftElement,
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
-} from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+  InputLeftAddon,
+} from '@chakra-ui/react';
+import { FaUserAlt, FaLock } from 'react-icons/fa';
+import { MdEmail } from 'react-icons/md';
+import careerflowLogo from '../assets/careerflow.svg';
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
+const CMdEmail = chakra(MdEmail);
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   const handleShowClick = () => setShowPassword(!showPassword);
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("email", email, password, name);
+    console.log('email', name, email, password);
 
     try {
-      const response = await fetch("/signup", {
-        method: "POST",
+      const response = await fetch('/auth/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       // Check for success
       if (response.ok) {
         const data = await response.json();
-        console.log("Account signed up", data);
-        window.location.href = "/";
+        console.log('Account signed up', data);
+        navigate('/', { replace: true });
       } else {
-        console.error("Error signing up.", response);
+        console.error('Error signing up.', response);
       }
     } catch (error) {
-      console.error("Network error", error);
+      console.error('Network error', error);
     }
   };
 
@@ -69,9 +72,10 @@ function Signup() {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="orange.500" />
+        {/* <Avatar bg="orange.500" /> */}
+        <img src={careerflowLogo} alt="logo" />
         <Heading color="orange.400">Sign up!</Heading>
-        <Box minW={{ base: "90%", md: "468px" }}>
+        <Box minW={{ base: '90%', md: '468px' }}>
           <form onSubmit={handleSubmit}>
             <Stack
               spacing={4}
@@ -81,10 +85,12 @@ function Signup() {
             >
               <FormControl>
                 <InputGroup>
-                  <InputLeftElement
+                  <InputLeftAddon
                     pointerEvents="none"
-                    children={<CFaUserAlt color="orange.300" />}
-                  />
+                  >
+                    <CMdEmail color="orange.300" />
+
+                  </InputLeftAddon>
                   <Input
                     type="email"
                     placeholder="email address"
@@ -95,10 +101,13 @@ function Signup() {
               </FormControl>
               <FormControl>
                 <InputGroup>
-                  <InputLeftElement
+                  <InputLeftAddon
                     pointerEvents="none"
-                    children={<CFaUserAlt color="orange.300" />}
-                  />
+
+                  >
+                    <CFaUserAlt color="orange.300" />
+
+                  </InputLeftAddon>
                   <Input
                     type="text"
                     placeholder="username"
@@ -109,20 +118,23 @@ function Signup() {
               </FormControl>
               <FormControl>
                 <InputGroup>
-                  <InputLeftElement
+                  <InputLeftAddon
                     pointerEvents="none"
                     color="gray.300"
-                    children={<CFaLock color="orange.300" />}
-                  />
+
+                  >
+                    <CFaLock color="orange.300" />
+
+                  </InputLeftAddon>
                   <Input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? 'Hide' : 'Show'}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -144,8 +156,9 @@ function Signup() {
         </Box>
       </Stack>
       <Box>
-        Already have an account?{" "}
-        <Link color="orange.500" href="#">
+        Already have an account?
+        {' '}
+        <Link color="orange.500" href="/login">
           Sign in
         </Link>
       </Box>

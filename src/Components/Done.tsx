@@ -9,7 +9,7 @@ import statuses from '../Statuses';
 
 function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs: JobData[] }) {
   const [draggingOverResult, setDraggingOverResult] = useState(false);
-  const [draggingOverGhosted, setDraggingOverGhosted] = useState(false);
+  // const [draggingOverGhosted, setDraggingOverGhosted] = useState(false);
   const resultJobList = resultJobs.map((job, index) => (
     <JobContainer job={job} index={index} key={uuidv4()} />
   ));
@@ -19,13 +19,16 @@ function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs:
 
   console.log('Done joblist result', resultJobList);
   console.log('Done joblist ghosted', ghostedJobList);
-  
+  const dragOver = false;
+  useEffect(() => {
+    setDraggingOverResult(dragOver);
+  }, [dragOver]);
 
   return (
     <Box
       w="100%"
       h="100%"
-      bg={(draggingOverResult || draggingOverGhosted) ? 'white' : '#ededed'}
+      bg={(draggingOverResult) ? 'white' : '#ededed'}
       transition="background-color 200ms ease"
       color="black"
       borderRadius="md"
@@ -40,22 +43,32 @@ function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs:
       <Droppable droppableId="result">
         {(provided, snapshot) => (
           <>
-            {setDraggingOverResult(snapshot.isDraggingOver)}
             <p style={{ margin: '5px 0' }}>Result</p>
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ height: '55%', overflowY: 'auto', overflowX: 'hidden' }}>
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{
+                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '55%', overflowY: 'auto', overflowX: 'hidden',
+              }}
+            >
               {resultJobList}
               {provided.placeholder}
             </div>
-
           </>
         )}
       </Droppable>
       <Droppable droppableId="ghosted">
         {(provided, snapshot) => (
           <>
-            {setDraggingOverGhosted(snapshot.isDraggingOver)}
+            {/* {setDraggingOverGhosted(snapshot.isDraggingOver)} */}
             <p style={{ margin: '5px 0' }}>👻 Ghosted</p>
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ height: '30%', overflowY: 'auto', overflowX: 'hidden' }}>
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{
+                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '30%', overflowY: 'auto', overflowX: 'hidden',
+              }}
+            >
               {ghostedJobList}
               {provided.placeholder}
             </div>
