@@ -5,7 +5,7 @@ import sessionController from '../controllers/sessionController.ts';
 const router = express.Router();
 
 // add an application (POST)
-router.post('/', applicationController.createApplication, (_, res) => res.status(201).json(res.locals.applications));
+router.post('/', sessionController.isLoggedIn, applicationController.createApplication, (_, res) => res.status(201).json(res.locals.application));
 
 // get all applications to populate board (GET)
 // get applications to populate 'not applied' display

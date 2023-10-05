@@ -13,32 +13,35 @@ const applicationController = {
       const {
         company_name, position, listing_link, notes, applied_date,
       } = req.body.jobData;
-
+      const { userId } = res.locals;
       const data = [
-        '1',
+        userId, // passed in from sessionController jwt
         company_name,
         position,
         listing_link,
         notes,
         applied_date,
-        1,
+        1, // always 1 because createApplication always starts at Not Applied which is status_id 1
       ];
-      console.log(data);
       const createQuery = `INSERT INTO applications(user_id, company_name, position, listing_link, notes, applied_date, status_id)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
       `;
       const result = await db.query(createQuery, data);
-      console.log('result', result.rows[0]);
       const [application] = result.rows;
       res.locals.application = application;
       return next();
     } catch (err) {
       console.error(
-        'Error updating Application in ApplicationController createApplications middleware:',
+        'Error creating Application in ApplicationController createApplications middleware:',
         err,
       );
-      return next(err);
+      return next({
+        log: `error in applicationController.createApplication: ${err}`,
+        message: {
+          err: `Error in creating application: ${err}`,
+        },
+      });
     }
   },
 
