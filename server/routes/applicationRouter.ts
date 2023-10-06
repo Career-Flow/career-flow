@@ -20,7 +20,7 @@ router.delete('/', applicationController.deleteApplication, (_, res) => res.stat
 // using drop down
 // application details
 // save functionality
-router.put('/', applicationController.updateApplication, (_, res) => res.status(201).json(res.locals.application));
+router.put('/', sessionController.isLoggedIn, applicationController.updateApplication, (_, res) => res.status(201).json(res.locals.application));
 // router.patch('/', applicationController.updateApplication, (_, res) => {
 //   res.locals.application;
 // });

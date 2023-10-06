@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import {
   Box, Text, Button,
   useDisclosure,
+  Container,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { Droppable } from '@hello-pangea/dnd';
@@ -10,7 +12,8 @@ import AddJobForm from './AddJobForm';
 import JobContainer from './JobContainer';
 import { JobData } from '../Types';
 
-function NotApplied({ jobs }: { jobs: JobData[] }) {
+function NotApplied({ jobs, setNAJobs }:
+{ jobs: JobData[], setNAJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} />);
@@ -39,14 +42,16 @@ function NotApplied({ jobs }: { jobs: JobData[] }) {
           <Text fontWeight="700" color="#9C4221" textAlign="center" mb={2}>
             👋 Not Applied
           </Text>
+          <Container overflowY="scroll">
 
-          {jobList}
-          {provided.placeholder}
+            {jobList}
+            {provided.placeholder}
 
-          <Button onClick={onOpen} m="2" colorScheme="teal" size="md">
-            <AddIcon boxSize={4} />
-          </Button>
-          <AddJobForm isOpen={isOpen} onClose={onClose} />
+            <Button onClick={onOpen} my={2} colorScheme="teal" size="md" width="100%">
+              <AddIcon boxSize={4} />
+            </Button>
+            <AddJobForm isOpen={isOpen} onClose={onClose} setNAJobs={setNAJobs} />
+          </Container>
         </Box>
       )}
     </Droppable>

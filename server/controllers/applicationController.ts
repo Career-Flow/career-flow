@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from 'express';
 import db from '../models/db.ts';
 
+
 const applicationController = {
   // create application
   async createApplication(
@@ -27,7 +28,16 @@ const applicationController = {
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
       `;
-      const result = await db.query(createQuery, data);
+      const newApp = await db.query(createQuery, data);
+      const returnedApp = newApp.rows[0];
+      const newAppQuery = `SELECT applications._id, applications.user_id, applications.company_name, applications.position, applications.listing_link, 
+      applications.notes, applications.applied_date, applications.last_updated, status.name AS status
+      FROM applications
+      JOIN status ON applications.status_id = status._id
+      WHERE applications.user_id = $1
+      ORDER BY applications._id ASC;  
+      `;
+      const result = await db.query(newAppQuery, [returnedApp.user_id]);
       const [application] = result.rows;
       res.locals.application = application;
       return next();
@@ -54,9 +64,12 @@ const applicationController = {
       const user_id = res.locals.userId;
       // console.log("entering getApplications middleware user_id:", req.body);
       const userIdQuery = `
-      SELECT *
+      SELECT applications._id, applications.user_id, applications.company_name, applications.position, applications.listing_link, 
+        applications.notes, applications.applied_date, applications.last_updated, status.name AS status
       FROM applications
-      WHERE user_id=$1; `;
+      JOIN status ON applications.status_id = status._id
+      WHERE applications.user_id = $1
+      ORDER BY applications._id ASC;   `; // query joins applications table with status so status._id is replaced with status
       const results = await db.query(userIdQuery, [user_id]);
       res.locals.applications = results.rows;
       return next();

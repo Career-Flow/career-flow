@@ -64,9 +64,9 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
     }
   };
 
-  useEffect(() => {
-    console.log(status); // Log the updated reminder immediately after it changes
-  }, [jobData, status]);
+  // useEffect(() => {
+  //   console.log(status); // Log the updated reminder immediately after it changes
+  // }, [jobData, status]);
 
   // Patch
   const handleSave = async () => {

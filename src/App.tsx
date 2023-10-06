@@ -1,6 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-nested-ternary */
-import { useState, useEffect } from 'react';
-// import { Navigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Grid, GridItem } from '@chakra-ui/react';
 import './App.css';
 import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
@@ -13,121 +14,63 @@ import careerflowLogo from './assets/careerflow.svg';
 import statuses, { statusSwitch } from './Statuses';
 import { JobData } from './Types';
 
-const dummyData = [
-  {
-    user_id: '123456',
-    app_id: '1234567',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
-    applied_date: new Date(),
-    last_updated: new Date(),
-    status: 'Not Applied',
-    reminders: [
-      {
-        reminderDate: new Date(),
-        reminderType: '',
-      },
-    ],
-  },
-  {
-    user_id: '234567',
-    app_id: '2345678',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
-    applied_date: new Date(),
-    last_updated: new Date(),
-    status: 'Interviewing',
-    reminders: [
-      {
-        reminderDate: new Date(),
-        reminderType: '',
-      },
-    ],
-  },
-  {
-    user_id: '345678',
-    app_id: '3456789',
-    company_name: 'test1',
-    position: 'some job',
-    listing_link: 'some link',
-    notes: 'got money?',
-    applied_date: new Date(),
-    last_updated: new Date(),
-    status: 'Applied',
-    reminders: [
-      {
-        reminderDate: new Date(),
-        reminderType: '',
-      },
-    ],
-  },
-];
-
 function App() {
   // Use this for the state of the jobs, we expect an array of JobData objects
-  const [jobs, setJobs] = useState<JobData[]>(dummyData);
+  const [jobs, setJobs] = useState<JobData[]>([]);
   // this.state.jobs = [{}, {},{}]
-  const [nAJobs, setnAJobs] = useState<JobData[]>([dummyData[0]]);
-  const [iPJobs, setIPJobs] = useState<JobData[]>([dummyData[1], dummyData[2]]);
+  const [nAJobs, setNAJobs] = useState<JobData[]>([]);
+  const [iPJobs, setIPJobs] = useState<JobData[]>([]);
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
   const [loggedIn, setLoggedIn] = useState<null | boolean>(null);
 
+  // useRef values do not get reset between rerenders
+  const isFetchDataInvoked = useRef(false);
+
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch('/api', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      // if you get an array back, empty or with data, set true
-      // if data doesn't exist, redirect user back to login
-      if (Array.isArray(data)) setLoggedIn(true); else setLoggedIn(false);
-      console.log(data, '-----------');
-    }
-    try {
-      fetchData();
-    } catch (err) {
-      console.log(`no jobs yet ${err}`);
-    }
+    const fetchData = async () => {
+      if (!isFetchDataInvoked.current) {
+        console.log(isFetchDataInvoked.current);
+        try {
+          const response = await fetch('/api', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const data = await response.json();
+
+          // setting all the column jobs
+          data.forEach((newJob: JobData) => {
+            if (statuses[newJob.status] === 'notapplied') {
+              setNAJobs((prevNAJobs) => [...prevNAJobs, newJob]);
+            } else if (statuses[newJob.status] === 'inprogress') {
+              setIPJobs((prevIPJobs) => [...prevIPJobs, newJob]);
+            } else if (statuses[newJob.status] === 'result') {
+              setResultJobs((prevResultJobs) => [...prevResultJobs, newJob]);
+            } else if (statuses[newJob.status] === 'ghosted') {
+              setGhostedJobs((prevGhostedJobs) => [...prevGhostedJobs, newJob]);
+            }
+          });
+          setJobs((prevJobs) => [...prevJobs, ...data]);
+          // setJobs(data);
+
+          // Set loggedIn based on whether data is an array or not
+          setLoggedIn(Array.isArray(data));
+
+          console.log(data, '-----------');
+        } catch (err) {
+          setLoggedIn(false);
+          console.log(`no jobs yet ${err}`);
+        }
+      }
+    };
+
+    fetchData();
+    // set it to true, so the fetch only happens once.
+    isFetchDataInvoked.current = true;
   }, []);
-
-  // useEffect(() => {
-  //   // fetch jobs from server
-  //   fetch('/application')
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       // res.forEach((newJob:JobData) => {
-  //       //   setJobs([...jobs, newJob]);
-  //       //   if(newJob.status === 'Not Applied')
-
-  //       // })
-  //       setJobs(res);
-
-  //       setnAJobs(() => res.filter((job: JobData) => job.status === 'Not Applied'));
-
-  //       setIPJobs(() => res.filter(
-  //         (job: JobData) => job.status === 'Applied'
-  //             || job.status === 'Interviewing'
-  //             || job.status === 'Waiting',
-  //       ));
-
-  //       setResultJobs(() => res.filter(
-  //         (job: JobData) => job.status === 'Rejected'
-  //             || job.status === 'Ghosted'
-  //             || job.status === 'Accepted',
-  //       ));
-  //     })
-  //     .catch(() => {
-  //       console.log('no jobs yet');
-  //     });
-  // }, [jobs]);
 
   /*
   what comes out of the result object in onDragEnd?
@@ -146,10 +89,12 @@ function App() {
   */
 
   useEffect(() => {
+    console.log('state jobs', jobs);
     console.log('nAJobs', nAJobs);
     console.log('iPJobs', iPJobs);
     console.log('doneJobs', resultJobs);
-  }, [nAJobs, iPJobs, resultJobs]);
+    console.log(loggedIn);
+  }, [nAJobs, iPJobs, resultJobs, jobs, loggedIn]);
 
   // type for the source and destination objects from the dnd result
   type SourceOrDest = {
@@ -173,13 +118,14 @@ function App() {
     const copyResultJobs = [...resultJobs];
     const copyGhostedJobs = [...ghostedJobs];
     let indexOffSet = 0;
+    // increasing indexOffSet by 1 where the item is in original column, but index changes
     if (destination.droppableId === source.droppableId) { indexOffSet += 1; }
 
     // alter the state of the destination columns for the moved job
     switch (destination.droppableId) {
       case 'notapplied':
         copynAJobs.splice(destination.index, 0, temp);
-        setnAJobs(copynAJobs);
+        setNAJobs(copynAJobs);
         break;
       case 'inprogress':
         console.log('copyiPJobs in the switch before ', JSON.stringify(copyiPJobs));
@@ -203,7 +149,7 @@ function App() {
     switch (source.droppableId) {
       case 'notapplied':
         copynAJobs.splice(source.index + indexOffSet, 1);
-        setnAJobs(copynAJobs);
+        setNAJobs(copynAJobs);
         break;
       case 'inprogress':
         copyiPJobs.splice(source.index + indexOffSet, 1);
@@ -220,6 +166,26 @@ function App() {
       default:
         break;
     }
+
+    const updateStatus = async (newStatus: string) => {
+      // use statusSwitch to convert back to DB status
+
+      try {
+        const response = await fetch('/api', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(),
+        });
+
+        const data = await response.json();
+
+        console.log(data, '-----------');
+      } catch (err) {
+        console.log(`no jobs yet ${err}`);
+      }
+    };
   };
 
   const onDragEnd: OnDragEndResponder = (result) => {
@@ -243,7 +209,7 @@ function App() {
       console.log('source was notapplied');
       nAJobs.forEach((job) => {
         // find the id of the thing being dragged
-        if (job.app_id === result.draggableId) {
+        if (String(job._id) === result.draggableId) {
           // source -> destination
           updateStateAndSet(job, source, destination);
         }
@@ -252,7 +218,7 @@ function App() {
       console.log('source was inprogress');
       iPJobs.forEach((job) => {
         // find the id of the thing being dragged
-        if (job.app_id === result.draggableId) {
+        if (String(job._id) === result.draggableId) {
           // source -> destination
           updateStateAndSet(job, source, destination);
         }
@@ -261,7 +227,7 @@ function App() {
       console.log('source was result');
       resultJobs.forEach((job) => {
         // find the id of the thing being dragged
-        if (job.app_id === result.draggableId) {
+        if (String(job._id) === result.draggableId) {
           // source -> destination
           updateStateAndSet(job, source, destination);
         }
@@ -270,7 +236,7 @@ function App() {
       console.log('source was ghosted');
       ghostedJobs.forEach((job) => {
         // find the id of the thing being dragged
-        if (job.app_id === result.draggableId) {
+        if (String(job._id) === result.draggableId) {
           // source -> destination
           updateStateAndSet(job, source, destination);
         }
@@ -316,7 +282,7 @@ function App() {
           </GridItem>
           <DragDropContext onDragEnd={onDragEnd}>
             <GridItem area="notapplied" maxW="30vw" style={{ overflow: 'hidden' }}>
-              <NotApplied jobs={nAJobs} />
+              <NotApplied jobs={nAJobs} setNAJobs={setNAJobs} />
             </GridItem>
             <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
               <Inprogress jobs={iPJobs} />

@@ -18,9 +18,10 @@ import {
   FormHelperText,
   UseDisclosureProps,
 } from '@chakra-ui/react';
+import { JobData } from '../Types';
 
-function AddJobForm({ isOpen, onClose } : UseDisclosureProps &
-{ isOpen: boolean, onClose: () => void }) {
+function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
+{ isOpen: boolean, onClose: () => void, setNAJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   const [jobData, setJobData] = useState({
     company_name: '',
     position: '',
@@ -39,7 +40,11 @@ function AddJobForm({ isOpen, onClose } : UseDisclosureProps &
         headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
-        .then(() => console.log('successfully posted job!'));
+        .then((data: JobData) => {
+          setNAJobs((prev) => [...prev, data]);
+          onClose();// closes modal
+          console.log('successfully posted job!', data);
+        });
     } catch (err) {
       console.log('job post unsuccessful', err);
     }

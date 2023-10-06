@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { useState } from 'react';
 import '../App.css';
 import {
@@ -15,7 +16,7 @@ import statuses from '../Statuses';
 type JobCondition = 'notApplied' | 'inProgress' | 'done';
 
 function JobContainer({ job, index }: { job: JobData, index: number }) {
-  console.log('jobcontainer job.status', job.status);
+  console.log('jobcontainer job.status', job);
   const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
   // renders based off condition: not applied, inprogress, done
@@ -28,17 +29,17 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
     // eslint-disable-next-line max-len
     // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
     // post status to job
-    try {
-      await fetch('/api', {
-        method: 'POST',
-        body: JSON.stringify({ status }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('posted status to job'));
-    } catch {
-      console.log('job status post unsuccessful');
-    }
+    // try {
+    //   await fetch('/api', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ status }),
+    //     headers: { 'Content-Type': 'application/json' },
+    //   })
+    //     .then((res) => res.json())
+    //     .then(() => console.log('posted status to job'));
+    // } catch {
+    //   console.log('job status post unsuccessful');
+    // }
   };
 
   const handleDoubleClicked = (event) => {
@@ -50,7 +51,7 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
   // if inprogress: name of company, role, dropdown (state), date of last updated
   // done: name of company, role, accepted/rejected/ghosted - emoji
   return (
-    <Draggable draggableId={job.app_id} index={index}>
+    <Draggable draggableId={String(job._id)} index={index}>
       {(provided, snapshot) => (
         <>
           <Box
@@ -65,8 +66,8 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
           >
             {statuses[job.status] === 'notapplied' && (
             <Box>
-              <p>Company: ReactType</p>
-              <p>Role: Software Engineer</p>
+              <p>{`Company Name: ${job.company_name}`}</p>
+              <p>{`Role: ${job.position}`}</p>
             </Box>
             )}
             {statuses[job.status] === 'inprogress' && (
@@ -77,10 +78,10 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
-                <p className="displayDate">09/12/23</p>
+                <p>{`Role: ${job.position}`}</p>
+                <p className="displayDate">{`${new Date(job.applied_date).toDateString()}`}</p>
               </div>
               <div className="jobFooterContainer">
                 <div className="jobMenu">
@@ -109,9 +110,9 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
+                <p>{`Role: ${job.position}`}</p>
               </div>
               {/* <Text color="#65c268" alignSelf="center">
                     ACCEPTED!
@@ -129,9 +130,9 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
+                <p>{`Role: ${job.position}`}</p>
               </div>
               {/* <Text color="#65c268" alignSelf="center">
                     ACCEPTED!
