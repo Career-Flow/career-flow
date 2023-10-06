@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -17,32 +17,28 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-} from "@chakra-ui/react";
-
-import { Box } from "@chakra-ui/react";
-import {
+  UseDisclosureProps,
+  Box,
   Editable,
   EditableInput,
   EditablePreview,
   EditableTextarea,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import CreateReminder from "./CreateReminder";
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import CreateReminder from './CreateReminder';
 
-const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
-  isOpen,
-  onClose,
-}) => {
-  //Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
+function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
+{ isOpen: boolean, onClose: () => void }) {
+  // Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
 
   const [jobData, setJobData] = useState({
-    company_name: "",
-    position: "",
-    listing_link: "",
-    notes: "",
+    company_name: '',
+    position: '',
+    listing_link: '',
+    notes: '',
   });
-  const [status, setStatus] = useState("Done");
+  const [status, setStatus] = useState('Done');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,18 +49,18 @@ const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const handleStatusChange = async (e) => {
     // console.log(e);
     await setStatus(e.target.value);
-    //newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
-    //post status to job
+    // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
+    // post status to job
     try {
-      await fetch("/api", {
-        method: "POST",
+      await fetch('/api', {
+        method: 'POST',
         body: JSON.stringify({ status }),
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
-        .then(() => console.log("posted status to job"));
+        .then(() => console.log('posted status to job'));
     } catch {
-      console.log("job status post unsuccessful");
+      console.log('job status post unsuccessful');
     }
   };
 
@@ -72,19 +68,19 @@ const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     console.log(status); // Log the updated reminder immediately after it changes
   }, [jobData, status]);
 
-  //Patch
+  // Patch
   const handleSave = async () => {
     event.preventDefault();
     try {
-      await fetch("/api", {
-        method: "PATCH",
+      await fetch('/api', {
+        method: 'PATCH',
         body: JSON.stringify({ jobData }),
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
-        .then(() => console.log("edited job!"));
+        .then(() => console.log('edited job!'));
     } catch {
-      console.log("edit job unsuccessful");
+      console.log('edit job unsuccessful');
     }
   };
 
@@ -156,7 +152,8 @@ const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
               </Box>
 
               <Text fontWeight="550" textAlign="center">
-                Notes:{" "}
+                Notes:
+                {' '}
               </Text>
               <Box>
                 <Editable
@@ -203,6 +200,6 @@ const EditJobDetails: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </Modal>
     </div>
   );
-};
+}
 
 export default EditJobDetails;

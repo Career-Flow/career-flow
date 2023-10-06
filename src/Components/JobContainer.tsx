@@ -5,6 +5,7 @@ import {
   Select,
   Flex,
   useDisclosure,
+  UseDisclosureReturn,
 } from '@chakra-ui/react';
 import { Draggable } from '@hello-pangea/dnd';
 import EditJobDetails from './EditJobDetails';
@@ -15,7 +16,7 @@ type JobCondition = 'notApplied' | 'inProgress' | 'done';
 
 function JobContainer({ job, index }: { job: JobData, index: number }) {
   console.log('jobcontainer job.status', job.status);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
   // renders based off condition: not applied, inprogress, done
   const [jobCondition, setJobCondition] = useState<JobCondition>('inProgress');

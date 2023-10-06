@@ -5,17 +5,17 @@ import Reminder from './Reminder';
 function Reminders() {
   const [reminders, setReminders] = useState([]);
 
-  useEffect(() => {
-    // get reminders data
-    fetch('/api')
-      .then((res) => res.json())
-      .then((res) => res.forEach((newReminder) => {
-        setReminders([...reminders, newReminder]);
-      }))
-      .catch((err) => {
-        console.log('no reminders yet');
-      });
-  }, [reminders]);
+  // useEffect(() => {
+  //   // get reminders data
+  //   fetch('/api')
+  //     .then((res) => res.json())
+  //     .then((res) => res.forEach((newReminder) => {
+  //       setReminders([...reminders, newReminder]);
+  //     }))
+  //     .catch((err) => {
+  //       console.log('no reminders yet');
+  //     });
+  // }, [reminders]);
 
   return (
     <Box

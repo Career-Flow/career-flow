@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -20,14 +21,14 @@ const cookieController = {
           },
         });
       }
-      const { email } = res.locals.user;
+      const { email, _id } = res.locals.user;
       // for typescript edge case coverage when TOKEN_KEY is null
       if (!process.env.TOKEN_KEY) {
         throw new Error('TOKEN_KEY environment variable is not defined');
       }
       // creating JWT
       const token = jwt.sign(
-        { email },
+        { id: _id, email },
         process.env.TOKEN_KEY,
         {
           expiresIn: '2h',

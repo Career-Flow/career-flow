@@ -15,6 +15,7 @@ app.use(cors<Request>());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/auth', userRouter);
+app.use('/api', applicationRouter);
 // app.use("/signup", userRouter);
 // app.use('/reminder', reminderRouter);
 
@@ -26,7 +27,6 @@ app.use('/auth', userRouter);
 //   console.log("user", req.body);
 // });
 
-app.use('/api', applicationRouter);
 
 app.use((_: Request, res: Response) => res.status(404).send('Page not found...'));
 

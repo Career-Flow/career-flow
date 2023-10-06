@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -9,41 +10,43 @@ import {
   ModalCloseButton,
   Button,
   Textarea,
-} from "@chakra-ui/react";
-import {
+
   Box,
   Input,
   FormControl,
   FormLabel,
   FormHelperText,
-} from "@chakra-ui/react";
+  UseDisclosureProps,
+} from '@chakra-ui/react';
 
-const AddJobForm = ({ isOpen, onClose }) => {
+function AddJobForm({ isOpen, onClose } : UseDisclosureProps &
+{ isOpen: boolean, onClose: () => void }) {
   const [jobData, setJobData] = useState({
-    company_name: "",
-    position: "",
-    listing_link: "",
-    notes: "",
+    company_name: '',
+    position: '',
+    listing_link: '',
+    notes: '',
     applied_date: new Date().toISOString(),
   });
 
-  //didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
-  const handleSubmit = async (event) => {
+  // didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
+  const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
     try {
-      await fetch("/application", {
-        method: "POST",
+      await fetch('/api', {
+        method: 'POST',
         body: JSON.stringify({ jobData }),
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
-        .then(() => console.log("successfully posted job!"));
-    } catch {
-      console.log("job post unsuccessful");
+        .then(() => console.log('successfully posted job!'));
+    } catch (err) {
+      console.log('job post unsuccessful', err);
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent & { target: { name: string, value: string } }) => {
+    // type doing an intersection between the React.ChangeEvent and our custom target key-value
     const { name, value } = event.target;
     setJobData({ ...jobData, [name]: value });
     // console.log('job Data', jobData)
@@ -101,6 +104,6 @@ const AddJobForm = ({ isOpen, onClose }) => {
       </Modal>
     </div>
   );
-};
+}
 
 export default AddJobForm;

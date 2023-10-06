@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+// import { Navigate } from 'react-router-dom';
 import { Grid, GridItem } from '@chakra-ui/react';
 import './App.css';
 import { DragDropContext, OnDragEndResponder } from '@hello-pangea/dnd';
@@ -325,6 +325,7 @@ function App() {
               <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />
             </GridItem>
           </DragDropContext>
+
         </>
       ) : loggedIn === false ? (
         <Navigate to="/login" replace />
