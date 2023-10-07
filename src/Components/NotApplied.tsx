@@ -42,7 +42,7 @@ function NotApplied({ jobs, setNAJobs }:
           <Text fontWeight="700" color="#9C4221" textAlign="center" mb={2}>
             👋 Not Applied
           </Text>
-          <Container overflowY="scroll">
+          <Container overflowY="auto" px="1">
 
             {jobList}
             {provided.placeholder}

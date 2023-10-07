@@ -117,9 +117,28 @@ function App() {
     const copyiPJobs = [...iPJobs];
     const copyResultJobs = [...resultJobs];
     const copyGhostedJobs = [...ghostedJobs];
-    let indexOffSet = 0;
-    // increasing indexOffSet by 1 where the item is in original column, but index changes
-    if (destination.droppableId === source.droppableId) { indexOffSet += 1; }
+
+    // remove the moved job from the originating column
+    switch (source.droppableId) {
+      case 'notapplied':
+        copynAJobs.splice(source.index, 1);
+        setNAJobs(copynAJobs);
+        break;
+      case 'inprogress':
+        copyiPJobs.splice(source.index, 1);
+        setIPJobs(copyiPJobs);
+        break;
+      case 'result':
+        copyResultJobs.splice(source.index, 1);
+        setResultJobs(copyResultJobs);
+        break;
+      case 'ghosted':
+        copyGhostedJobs.splice(source.index, 1);
+        setGhostedJobs(copyGhostedJobs);
+        break;
+      default:
+        break;
+    }
 
     // alter the state of the destination columns for the moved job
     switch (destination.droppableId) {
@@ -145,29 +164,7 @@ function App() {
         break;
     }
 
-    // remove the moved job from the originating column
-    switch (source.droppableId) {
-      case 'notapplied':
-        copynAJobs.splice(source.index + indexOffSet, 1);
-        setNAJobs(copynAJobs);
-        break;
-      case 'inprogress':
-        copyiPJobs.splice(source.index + indexOffSet, 1);
-        setIPJobs(copyiPJobs);
-        break;
-      case 'result':
-        copyResultJobs.splice(source.index + indexOffSet, 1);
-        setResultJobs(copyResultJobs);
-        break;
-      case 'ghosted':
-        copyGhostedJobs.splice(source.index + indexOffSet, 1);
-        setGhostedJobs(copyGhostedJobs);
-        break;
-      default:
-        break;
-    }
-
-    const updateStatus = async (newStatus: string) => {
+    const updateDB = async () => {
       // use statusSwitch to convert back to DB status
 
       try {
@@ -176,16 +173,18 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(),
+          body: JSON.stringify(temp),
         });
+        // pass new job object to back
 
         const data = await response.json();
 
-        console.log(data, '-----------');
+        console.log(data, 'updateDB successful-----------');
       } catch (err) {
-        console.log(`no jobs yet ${err}`);
+        console.log(`updateDB unsuccessful ${err}`);
       }
     };
+    updateDB();
   };
 
   const onDragEnd: OnDragEndResponder = (result) => {

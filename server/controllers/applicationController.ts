@@ -2,7 +2,6 @@
 import { Request, Response, NextFunction } from 'express';
 import db from '../models/db.ts';
 
-
 const applicationController = {
   // create application
   async createApplication(
@@ -35,10 +34,12 @@ const applicationController = {
       FROM applications
       JOIN status ON applications.status_id = status._id
       WHERE applications.user_id = $1
-      ORDER BY applications._id ASC;  
+      ORDER BY applications._id DESC
+      LIMIT 1;  
       `;
       const result = await db.query(newAppQuery, [returnedApp.user_id]);
       const [application] = result.rows;
+      console.log(result.rows);
       res.locals.application = application;
       return next();
     } catch (err) {
@@ -96,16 +97,40 @@ const applicationController = {
         notes,
         applied_date,
         last_updated,
-        status_id,
-        id,
+        status,
+        _id,
       } = req.body;
-      console.log('entering updateApplication middleware req.body: ', req.body);
+
+      // checking if loggedin user is accessing correct data or edited cookies
+      if (res.locals.userId !== user_id) { throw new Error('userId from app did not match jwt userId'); }
+
+      console.log(
+        'entering updateApplication middleware req.body: ',
+        user_id,
+        company_name,
+        position,
+        listing_link,
+        notes,
+        applied_date,
+        last_updated,
+        status,
+        _id,
+      );
+
+      const statusQuery = `SELECT _id
+      FROM status
+      WHERE name = $1`;
+
+      const statusResult = await db.query(statusQuery, [status]);
+      const { _id: status_id } = statusResult.rows[0];
+
       const updateQuery = `
-      UPDATE applications
-      SET ( user_id, company_name, position, listing_link, notes, applied_date, last_updated,status_id ) = ( $1, $2, $3, $4, $5, $6, $7, $8)
-      WHERE _id=$9
-      RETURNING*;
-    `;
+        UPDATE applications
+        SET ( user_id, company_name, position, listing_link, notes, applied_date, last_updated, status_id ) = ( $1, $2, $3, $4, $5, $6, $7, $8)
+        WHERE _id=$9
+        RETURNING *;
+      `;
+
       const results = await db.query(updateQuery, [
         user_id,
         company_name,
@@ -115,9 +140,10 @@ const applicationController = {
         applied_date,
         last_updated,
         status_id,
-        id,
+        _id,
       ]);
       const [application] = results.rows;
+      console.log('status changed app', application);
       res.locals.application = application;
 
       return next();

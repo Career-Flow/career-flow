@@ -55,14 +55,14 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
       {(provided, snapshot) => (
         <>
           <Box
-            bg={snapshot.isDragging ? '#ffc5a9' : 'white'}
+            bg={snapshot.isDragging ? '#ffc5a9' : '#faf9f6'}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onDoubleClick={handleDoubleClicked}
             borderRadius="md"
             p="2.5"
-            boxShadow="sm"
+            boxShadow="md"
           >
             {statuses[job.status] === 'notapplied' && (
             <Box>
