@@ -18,7 +18,7 @@ function NotApplied({ jobs, setNAJobs }:
 
   const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} />);
 
-  console.log('not applied joblist', jobList);
+  // console.log('not applied joblist', jobList);
 
   return (
     <Droppable droppableId="notapplied">

@@ -22,6 +22,7 @@ function App() {
   const [iPJobs, setIPJobs] = useState<JobData[]>([]);
   const [resultJobs, setResultJobs] = useState<JobData[]>([]);
   const [ghostedJobs, setGhostedJobs] = useState<JobData[]>([]);
+  const [dropdown, setDropDown] = useState(false);
   const [loggedIn, setLoggedIn] = useState<null | boolean>(null);
 
   // useRef values do not get reset between rerenders
@@ -29,8 +30,12 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isFetchDataInvoked.current) {
-        console.log(isFetchDataInvoked.current);
+      if (!isFetchDataInvoked.current || dropdown) {
+        const newNAJobs:JobData[] = [];
+        const newIPJobs:JobData[] = [];
+        const newResultJobs:JobData[] = [];
+        const newGhostedJobs:JobData[] = [];
+        // console.log(isFetchDataInvoked.current);
         try {
           const response = await fetch('/api', {
             method: 'GET',
@@ -44,16 +49,20 @@ function App() {
           // setting all the column jobs
           data.forEach((newJob: JobData) => {
             if (statuses[newJob.status] === 'notapplied') {
-              setNAJobs((prevNAJobs) => [...prevNAJobs, newJob]);
+              newNAJobs.push(newJob);
             } else if (statuses[newJob.status] === 'inprogress') {
-              setIPJobs((prevIPJobs) => [...prevIPJobs, newJob]);
+              newIPJobs.push(newJob);
             } else if (statuses[newJob.status] === 'result') {
-              setResultJobs((prevResultJobs) => [...prevResultJobs, newJob]);
+              newResultJobs.push(newJob);
             } else if (statuses[newJob.status] === 'ghosted') {
-              setGhostedJobs((prevGhostedJobs) => [...prevGhostedJobs, newJob]);
+              newGhostedJobs.push(newJob);
             }
           });
-          setJobs((prevJobs) => [...prevJobs, ...data]);
+          setJobs(data);
+          setNAJobs(newNAJobs);
+          setIPJobs(newIPJobs);
+          setResultJobs(newResultJobs);
+          setGhostedJobs(newGhostedJobs);
           // setJobs(data);
 
           // Set loggedIn based on whether data is an array or not
@@ -70,7 +79,8 @@ function App() {
     fetchData();
     // set it to true, so the fetch only happens once.
     isFetchDataInvoked.current = true;
-  }, []);
+    setDropDown(false);
+  }, [dropdown]);
 
   /*
   what comes out of the result object in onDragEnd?
@@ -88,13 +98,13 @@ function App() {
 
   */
 
-  useEffect(() => {
-    console.log('state jobs', jobs);
-    console.log('nAJobs', nAJobs);
-    console.log('iPJobs', iPJobs);
-    console.log('doneJobs', resultJobs);
-    console.log(loggedIn);
-  }, [nAJobs, iPJobs, resultJobs, jobs, loggedIn]);
+  // useEffect(() => {
+  //   console.log('state jobs', jobs);
+  //   console.log('nAJobs', nAJobs);
+  //   console.log('iPJobs', iPJobs);
+  //   console.log('doneJobs', resultJobs);
+  //   console.log(loggedIn);
+  // }, [nAJobs, iPJobs, resultJobs, jobs, loggedIn]);
 
   // type for the source and destination objects from the dnd result
   type SourceOrDest = {
@@ -165,8 +175,6 @@ function App() {
     }
 
     const updateDB = async () => {
-      // use statusSwitch to convert back to DB status
-
       try {
         const response = await fetch('/api', {
           method: 'PUT',
@@ -284,7 +292,7 @@ function App() {
               <NotApplied jobs={nAJobs} setNAJobs={setNAJobs} />
             </GridItem>
             <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
-              <Inprogress jobs={iPJobs} />
+              <Inprogress jobs={iPJobs} setDropDown={setDropDown} />
             </GridItem>
             <GridItem area="done" maxW="30vw" style={{ overflow: 'hidden' }}>
               <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />

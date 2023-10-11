@@ -62,6 +62,7 @@ const applicationController = {
     next: NextFunction,
   ) {
     try {
+      console.log('in getApplications');
       const user_id = res.locals.userId;
       // console.log("entering getApplications middleware user_id:", req.body);
       const userIdQuery = `

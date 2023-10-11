@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../App.css';
 import {
   Box,
@@ -15,32 +15,59 @@ import statuses from '../Statuses';
 
 type JobCondition = 'notApplied' | 'inProgress' | 'done';
 
-function JobContainer({ job, index }: { job: JobData, index: number }) {
-  console.log('jobcontainer job.status', job);
+function JobContainer({ job, index, setDropDown }:
+{ job: JobData, index: number, setDropDown: React.Dispatch<React.SetStateAction<boolean>> }) {
+  console.log('jobcontainer job', job);
   const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
   // renders based off condition: not applied, inprogress, done
   const [jobCondition, setJobCondition] = useState<JobCondition>('inProgress');
-  const [status, setStatus] = useState('Applied');
+  const [status, setStatus] = useState('Not Applied');
 
   const handleStatusChange = async (e) => {
     console.log(e.target.value);
     await setStatus(e.target.value);
-    // eslint-disable-next-line max-len
-    // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
-    // post status to job
-    // try {
-    //   await fetch('/api', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ status }),
-    //     headers: { 'Content-Type': 'application/json' },
-    //   })
-    //     .then((res) => res.json())
-    //     .then(() => console.log('posted status to job'));
-    // } catch {
-    //   console.log('job status post unsuccessful');
-    // }
   };
+
+  useEffect(() => {
+    const updateDB = async () => {
+      try {
+        const response = await fetch('/api', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...job, status }),
+        });
+        // pass new job object to back
+
+        const data = await response.json();
+        setDropDown(true);
+        console.log(data, 'updateDB successful-----------');
+      } catch (err) {
+        console.log(`updateDB unsuccessful ${err}`);
+      }
+    };
+
+    if (status !== 'Not Applied') {
+      console.log('changed status', { ...job, status });
+      updateDB();
+    }
+  }, [status]);
+  // eslint-disable-next-line max-len
+  // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
+  // post status to job
+  // try {
+  //   await fetch('/api', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ status }),
+  //     headers: { 'Content-Type': 'application/json' },
+  //   })
+  //     .then((res) => res.json())
+  //     .then(() => console.log('posted status to job'));
+  // } catch {
+  //   console.log('job status post unsuccessful');
+  // }
 
   const handleDoubleClicked = (event) => {
     if (event.detail === 2) {
@@ -90,13 +117,14 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
                     onChange={handleStatusChange}
                     bg="color"
                     pl="2"
-                    placeholder="Status"
+                    value={job.status}
+                    placeholder="Select A Status"
                   >
                     <option value="Applied">Applied</option>
                     <option value="Interviewing">Interviewing</option>
                     <option value="Waiting">Waiting</option>
-                    <option value="Waiting">Accepted</option>
-                    <option value="Waiting">Rejected</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Rejected">Rejected</option>
                   </Select>
                 </div>
               </div>

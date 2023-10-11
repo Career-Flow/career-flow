@@ -17,8 +17,8 @@ function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs:
     <JobContainer job={job} index={index} key={uuidv4()} />
   ));
 
-  console.log('Done joblist result', resultJobList);
-  console.log('Done joblist ghosted', ghostedJobList);
+  // console.log('Done joblist result', resultJobList);
+  // console.log('Done joblist ghosted', ghostedJobList);
   const dragOver = false;
   useEffect(() => {
     setDraggingOverResult(dragOver);
