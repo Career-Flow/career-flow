@@ -21,6 +21,7 @@ module.exports = {
     ],
     'react/react-in-jsx-scope': 'off',
     'no-console': 'off',
+    'max-len': 'off'
   },
   overrides: [
     {

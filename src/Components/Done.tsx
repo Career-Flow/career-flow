@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Container, Text } from '@chakra-ui/react';
 import { Droppable } from '@hello-pangea/dnd';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
@@ -7,14 +7,14 @@ import JobContainer from './JobContainer';
 import { JobData } from '../Types';
 import statuses from '../Statuses';
 
-function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs: JobData[] }) {
+function Done({ resultJobs, ghostedJobs, setJobs }: { resultJobs: JobData[], ghostedJobs: JobData[], setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   const [draggingOverResult, setDraggingOverResult] = useState(false);
   // const [draggingOverGhosted, setDraggingOverGhosted] = useState(false);
   const resultJobList = resultJobs.map((job, index) => (
-    <JobContainer job={job} index={index} key={uuidv4()} />
+    <JobContainer job={job} index={index} key={uuidv4()} setJobs={setJobs}/>
   ));
   const ghostedJobList = ghostedJobs.map((job, index) => (
-    <JobContainer job={job} index={index} key={uuidv4()} />
+    <JobContainer job={job} index={index} key={uuidv4()} setJobs={setJobs}/>
   ));
 
   // console.log('Done joblist result', resultJobList);
@@ -44,34 +44,36 @@ function Done({ resultJobs, ghostedJobs }: { resultJobs: JobData[], ghostedJobs:
         {(provided, snapshot) => (
           <>
             <p style={{ margin: '5px 0' }}>Result</p>
-            <div
+            <Container
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{
                 backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '55%', overflowY: 'auto', overflowX: 'hidden',
               }}
+              px="1"
             >
               {resultJobList}
               {provided.placeholder}
-            </div>
+            </Container>
           </>
         )}
       </Droppable>
       <Droppable droppableId="ghosted">
         {(provided, snapshot) => (
           <>
-            {/* {setDraggingOverGhosted(snapshot.isDraggingOver)} */}
             <p style={{ margin: '5px 0' }}>👻 Ghosted</p>
-            <div
+            <Container
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{
-                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '30%', overflowY: 'auto', overflowX: 'hidden',
+                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', overflowY: 'auto', overflowX: 'hidden',
               }}
+              h="30%"
+              px="1"
             >
               {ghostedJobList}
               {provided.placeholder}
-            </div>
+            </Container>
 
           </>
         )}

@@ -12,7 +12,7 @@ const applicationController = {
     try {
       const {
         company_name, position, listing_link, notes, applied_date,
-      } = req.body.jobData;
+      } = req.body.jobFormData;
       const { userId } = res.locals;
       const data = [
         userId, // passed in from sessionController jwt
@@ -74,6 +74,17 @@ const applicationController = {
       ORDER BY applications._id ASC;   `; // query joins applications table with status so status._id is replaced with status
       const results = await db.query(userIdQuery, [user_id]);
       res.locals.applications = results.rows;
+      /* data sent as an array of objects in this format:
+      _id,
+      user_id,
+      company_name,
+      position,
+      listing_link,
+      notes,
+      applied_date,
+      last_updated,
+      status */
+
       return next();
     } catch (err) {
       console.error(
@@ -126,10 +137,16 @@ const applicationController = {
       const { _id: status_id } = statusResult.rows[0];
 
       const updateQuery = `
+      WITH updated_entry AS(
         UPDATE applications
         SET ( user_id, company_name, position, listing_link, notes, applied_date, last_updated, status_id ) = ( $1, $2, $3, $4, $5, $6, $7, $8)
         WHERE _id=$9
-        RETURNING *;
+        RETURNING *
+      )
+      SELECT updated_entry._id, updated_entry.user_id, updated_entry.company_name, updated_entry.position, updated_entry.listing_link, updated_entry.notes, 
+        updated_entry.applied_date, updated_entry.last_updated, status.name AS status
+      FROM updated_entry
+      JOIN status ON updated_entry.status_id = status._id
       `;
 
       const results = await db.query(updateQuery, [
@@ -144,6 +161,16 @@ const applicationController = {
         _id,
       ]);
       const [application] = results.rows;
+      /* data sent as a singular object in this format:
+      _id,
+      user_id,
+      company_name,
+      position,
+      listing_link,
+      notes,
+      applied_date,
+      last_updated,
+      status */
       console.log('status changed app', application);
       res.locals.application = application;
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import {
@@ -12,11 +13,11 @@ import AddJobForm from './AddJobForm';
 import JobContainer from './JobContainer';
 import { JobData } from '../Types';
 
-function NotApplied({ jobs, setNAJobs }:
-{ jobs: JobData[], setNAJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
+function NotApplied({ jobs, setNAJobs, setJobs }:
+{ jobs: JobData[], setNAJobs: React.Dispatch<React.SetStateAction<JobData[]>>, setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} />);
+  const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} setJobs={setJobs} />);
 
   // console.log('not applied joblist', jobList);
 
@@ -34,8 +35,7 @@ function NotApplied({ jobs, setNAJobs }:
           borderWidth="1px"
           borderColor="#c0b0a9"
           p="2"
-          display="flex"
-          flexDir="column"
+ 
           ref={provided.innerRef}
           {...provided.droppableProps}
         >

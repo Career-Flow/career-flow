@@ -31,10 +31,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       if (!isFetchDataInvoked.current || dropdown) {
-        const newNAJobs:JobData[] = [];
-        const newIPJobs:JobData[] = [];
-        const newResultJobs:JobData[] = [];
-        const newGhostedJobs:JobData[] = [];
         // console.log(isFetchDataInvoked.current);
         try {
           const response = await fetch('/api', {
@@ -45,24 +41,18 @@ function App() {
           });
 
           const data = await response.json();
-
-          // setting all the column jobs
-          data.forEach((newJob: JobData) => {
-            if (statuses[newJob.status] === 'notapplied') {
-              newNAJobs.push(newJob);
-            } else if (statuses[newJob.status] === 'inprogress') {
-              newIPJobs.push(newJob);
-            } else if (statuses[newJob.status] === 'result') {
-              newResultJobs.push(newJob);
-            } else if (statuses[newJob.status] === 'ghosted') {
-              newGhostedJobs.push(newJob);
-            }
-          });
+          /* data received in an array with jobData with this format:
+          _id,
+          user_id,
+          company_name,
+          position,
+          listing_link,
+          notes,
+          applied_date,
+          last_updated,
+          status */
           setJobs(data);
-          setNAJobs(newNAJobs);
-          setIPJobs(newIPJobs);
-          setResultJobs(newResultJobs);
-          setGhostedJobs(newGhostedJobs);
+
           // setJobs(data);
 
           // Set loggedIn based on whether data is an array or not
@@ -81,6 +71,31 @@ function App() {
     isFetchDataInvoked.current = true;
     setDropDown(false);
   }, [dropdown]);
+
+  useEffect(() => {
+    // setting all the column jobs
+    const newNAJobs:JobData[] = [];
+    const newIPJobs:JobData[] = [];
+    const newResultJobs:JobData[] = [];
+    const newGhostedJobs:JobData[] = [];
+
+    jobs.forEach((newJob: JobData) => {
+      if (statuses[newJob.status] === 'notapplied') {
+        newNAJobs.push(newJob);
+      } else if (statuses[newJob.status] === 'inprogress') {
+        newIPJobs.push(newJob);
+      } else if (statuses[newJob.status] === 'result') {
+        newResultJobs.push(newJob);
+      } else if (statuses[newJob.status] === 'ghosted') {
+        newGhostedJobs.push(newJob);
+      }
+    });
+
+    setNAJobs(newNAJobs);
+    setIPJobs(newIPJobs);
+    setResultJobs(newResultJobs);
+    setGhostedJobs(newGhostedJobs);
+  }, [jobs]);
 
   /*
   what comes out of the result object in onDragEnd?
@@ -120,7 +135,8 @@ function App() {
     // make a copy of the job
     // switch the status from the source status to the destination column status
     const temp = { ...job };
-    temp.status = statusSwitch(destination.droppableId);
+    // change to default statuses only if dragging to different columns
+    if (source.droppableId !== destination.droppableId) { temp.status = statusSwitch(destination.droppableId); }
     console.log('after switch temp.status', temp.status);
     // make copies of all the states
     const copynAJobs = [...nAJobs];
@@ -181,7 +197,7 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(temp),
+          body: JSON.stringify({ ...temp, last_updated: new Date().toISOString() }),
         });
         // pass new job object to back
 
@@ -289,13 +305,13 @@ function App() {
           </GridItem>
           <DragDropContext onDragEnd={onDragEnd}>
             <GridItem area="notapplied" maxW="30vw" style={{ overflow: 'hidden' }}>
-              <NotApplied jobs={nAJobs} setNAJobs={setNAJobs} />
+              <NotApplied jobs={nAJobs} setNAJobs={setNAJobs} setJobs={setJobs} />
             </GridItem>
             <GridItem area="inprogress" style={{ overflow: 'hidden' }}>
-              <Inprogress jobs={iPJobs} setDropDown={setDropDown} />
+              <Inprogress jobs={iPJobs} setJobs={setJobs} />
             </GridItem>
             <GridItem area="done" maxW="30vw" style={{ overflow: 'hidden' }}>
-              <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} />
+              <Done resultJobs={resultJobs} ghostedJobs={ghostedJobs} setJobs={setJobs} />
             </GridItem>
           </DragDropContext>
 

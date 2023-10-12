@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import JobContainer from './JobContainer';
 import { JobData } from '../Types';
 
-function Inprogress({ jobs, setDropDown }:
-{ jobs: JobData[], setDropDown: React.Dispatch<React.SetStateAction<boolean>> }) {
+function Inprogress({ jobs, setJobs }:
+{ jobs: JobData[], setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   // eslint-disable-next-line max-len
-  const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} setDropDown={setDropDown} />);
+  const jobList = jobs.map((job, index) => <JobContainer job={job} index={index} key={uuidv4()} setJobs={setJobs} />);
 
   // console.log('in progress joblist', jobList);
 

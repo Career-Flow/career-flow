@@ -7,6 +7,7 @@ import {
   Flex,
   useDisclosure,
   UseDisclosureReturn,
+  Text,
 } from '@chakra-ui/react';
 import { Draggable } from '@hello-pangea/dnd';
 import EditJobDetails from './EditJobDetails';
@@ -15,8 +16,8 @@ import statuses from '../Statuses';
 
 type JobCondition = 'notApplied' | 'inProgress' | 'done';
 
-function JobContainer({ job, index, setDropDown }:
-{ job: JobData, index: number, setDropDown: React.Dispatch<React.SetStateAction<boolean>> }) {
+function JobContainer({ job, index, setJobs }:
+{ job: JobData, index: number, setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   console.log('jobcontainer job', job);
   const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
@@ -37,13 +38,19 @@ function JobContainer({ job, index, setDropDown }:
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ ...job, status }),
+          body: JSON.stringify({ ...job, last_updated: new Date().toISOString(), status }),
         });
         // pass new job object to back
 
         const data = await response.json();
-        setDropDown(true);
+        setJobs((prev) => prev.map((ele) => {
+          if (ele._id === job._id) {
+            return data;
+          }
+          return ele;
+        }));
         console.log(data, 'updateDB successful-----------');
+        // can we get the full job list then set the state? or somehow find the job in the state then change it
       } catch (err) {
         console.log(`updateDB unsuccessful ${err}`);
       }
@@ -120,6 +127,7 @@ function JobContainer({ job, index, setDropDown }:
                     value={job.status}
                     placeholder="Select A Status"
                   >
+                    <option value="Not Applied">Not Applied</option>
                     <option value="Applied">Applied</option>
                     <option value="Interviewing">Interviewing</option>
                     <option value="Waiting">Waiting</option>
@@ -142,12 +150,18 @@ function JobContainer({ job, index, setDropDown }:
                 </Flex>
                 <p>{`Role: ${job.position}`}</p>
               </div>
-              {/* <Text color="#65c268" alignSelf="center">
+              {
+                job.status === 'Accepted' ? (
+                  <Text color="#65c268" alignSelf="center">
                     ACCEPTED!
-                  </Text> */}
-              {/* <Text color="#c27465" alignSelf="center">
-                REJECTED
-              </Text> */}
+                  </Text>
+                ) : (
+                  <Text color="#c27465" alignSelf="center">
+                    REJECTED
+                  </Text>
+                )
+
+              }
             </Box>
             )}
             {statuses[job.status] === 'ghosted' && (
@@ -155,6 +169,7 @@ function JobContainer({ job, index, setDropDown }:
               display="flex"
               flexDirection="row"
               justifyContent="space-between"
+              opacity="60%"
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
@@ -172,7 +187,7 @@ function JobContainer({ job, index, setDropDown }:
             )}
 
           </Box>
-          <EditJobDetails isOpen={isOpen} onClose={onClose} />
+          <EditJobDetails isOpen={isOpen} onClose={onClose} setJobs={setJobs} job={job} />
         </>
       )}
     </Draggable>

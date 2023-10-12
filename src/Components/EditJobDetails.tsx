@@ -24,25 +24,27 @@ import {
   EditablePreview,
   EditableTextarea,
 } from '@chakra-ui/react';
-
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { JobData } from '../Types';
 import CreateReminder from './CreateReminder';
 
-function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
-{ isOpen: boolean, onClose: () => void }) {
+function EditJobDetails({
+  isOpen, onClose, setJobs, job,
+} : UseDisclosureProps &
+{ isOpen: boolean, onClose: () => void, setJobs: React.Dispatch<React.SetStateAction<JobData[]>>, job: JobData }) {
   // Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
-
-  const [jobData, setJobData] = useState({
+  const [jobFormData, setJobFormData] = useState({
     company_name: '',
     position: '',
     listing_link: '',
     notes: '',
+    last_updated: new Date().toISOString(),
   });
-  const [status, setStatus] = useState('Done');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setJobData({ ...jobData, [name]: value });
+    console.log(e.target);
+    // const { name, value } = e.target;
+    // setJobData({...job, [name]: value });
     // console.log(jobData)
   };
 
@@ -51,17 +53,17 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
     await setStatus(e.target.value);
     // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
     // post status to job
-    try {
-      await fetch('/api', {
-        method: 'POST',
-        body: JSON.stringify({ status }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('posted status to job'));
-    } catch {
-      console.log('job status post unsuccessful');
-    }
+    // try {
+    //   await fetch('/api', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ status }),
+    //     headers: { 'Content-Type': 'application/json' },
+    //   })
+    //     .then((res) => res.json())
+    //     .then(() => console.log('posted status to job'));
+    // } catch {
+    //   console.log('job status post unsuccessful');
+    // }
   };
 
   // useEffect(() => {
@@ -74,7 +76,7 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
     try {
       await fetch('/api', {
         method: 'PATCH',
-        body: JSON.stringify({ jobData }),
+        body: JSON.stringify({ jobFormData }),
         headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
@@ -95,12 +97,12 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
             color="#9C4221"
             alignSelf="center"
             size="lg"
-            defaultValue="ReactType"
+            defaultValue={job.company_name}
           >
             <EditablePreview />
             <EditableInput
               name="company_name"
-              value={jobData.company_name}
+              value={jobFormData.company_name}
               onChange={handleChange}
             />
           </ModalHeader>
@@ -112,11 +114,11 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
             <Box className="addJobContent">
               <Flex display="flex" alignItems="center">
                 <Text fontWeight="550">Position: </Text>
-                <Editable pl="3" defaultValue="Software Engineer">
+                <Editable pl="3" defaultValue={job.position}>
                   <EditablePreview />
                   <EditableInput
                     name="position"
-                    value={jobData.position}
+                    value={jobFormData.position}
                     onChange={handleChange}
                   />
                 </Editable>
@@ -126,18 +128,18 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                 <Editable
                   pl="3"
                   color="#ED8936"
-                  defaultValue="https://www.codesmith.io/"
+                  defaultValue={job.listing_link}
                 >
                   <EditablePreview />
                   <EditableInput
                     type="url"
                     name="listing_link"
-                    value={jobData.listing_link}
+                    value={jobFormData.listing_link}
                     onChange={handleChange}
                   />
                 </Editable>
               </Flex>
-              <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
+              {/* <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
                 <Accordion allowToggle>
                   <AccordionItem>
                     <AccordionButton>
@@ -145,11 +147,11 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4}>
-                      <CreateReminder propData={jobData.company_name} />
+                      <CreateReminder propData={job.company_name} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
-              </Box>
+              </Box> */}
 
               <Text fontWeight="550" textAlign="center">
                 Notes:
@@ -159,12 +161,12 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                 <Editable
                   pl="3"
                   size="small"
-                  defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  defaultValue={job.notes}
                 >
                   <EditablePreview />
                   <EditableTextarea
                     name="notes"
-                    value={jobData.notes}
+                    value={jobFormData.notes}
                     onChange={handleChange}
                   />
                 </Editable>
@@ -178,13 +180,15 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                 onChange={handleStatusChange}
                 bg="color"
                 pl="2"
-                placeholder="Status"
+                value={job.status}
+                placeholder="Select A Status"
               >
+                <option value="Not Applied">Not Applied</option>
                 <option value="Applied">Applied</option>
                 <option value="Interviewing">Interviewing</option>
                 <option value="Waiting">Waiting</option>
-                <option value="Waiting">Accepted</option>
-                <option value="Waiting">Rejected</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
               </Select>
             </Box>
             <Button
