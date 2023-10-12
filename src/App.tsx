@@ -31,7 +31,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       if (!isFetchDataInvoked.current || dropdown) {
-        // console.log(isFetchDataInvoked.current);
         try {
           const response = await fetch('/api', {
             method: 'GET',
@@ -51,17 +50,21 @@ function App() {
           applied_date,
           last_updated,
           status */
+          // if user not logged in, throw error
+          if (!response.ok) {
+            throw new Error(`Server Error, ${JSON.stringify(data)}`);
+          }
           setJobs(data);
+          setLoggedIn(Array.isArray(data));
 
           // setJobs(data);
 
           // Set loggedIn based on whether data is an array or not
-          setLoggedIn(Array.isArray(data));
 
           console.log(data, '-----------');
         } catch (err) {
           setLoggedIn(false);
-          console.log(`no jobs yet ${err}`);
+          console.error(err);
         }
       }
     };
@@ -137,7 +140,6 @@ function App() {
     const temp = { ...job };
     // change to default statuses only if dragging to different columns
     if (source.droppableId !== destination.droppableId) { temp.status = statusSwitch(destination.droppableId); }
-    console.log('after switch temp.status', temp.status);
     // make copies of all the states
     const copynAJobs = [...nAJobs];
     const copyiPJobs = [...iPJobs];
@@ -173,9 +175,7 @@ function App() {
         setNAJobs(copynAJobs);
         break;
       case 'inprogress':
-        console.log('copyiPJobs in the switch before ', JSON.stringify(copyiPJobs));
         copyiPJobs.splice(destination.index, 0, temp);
-        console.log('copyiPJobs in the switch', JSON.stringify(copyiPJobs));
         setIPJobs(copyiPJobs);
         break;
       case 'result':
@@ -212,24 +212,19 @@ function App() {
   };
 
   const onDragEnd: OnDragEndResponder = (result) => {
-    const { destination, source, draggableId } = result; // drag info for the active job
-    console.log('dest', destination);
-    console.log('source', source);
-    console.log('draggableId', draggableId);
+    const { destination, source } = result; // drag info for the active job
     // if dragged outside of the droppable areas or if dragged back to the same spot, just return
     if (
       !destination
       || (destination.droppableId === source.droppableId
         && destination.index === source.index)
     ) {
-      console.log('returned out of onDragEnd');
       return;
     }
     // after dropping we need to change the status of the item that was dragged
     // Also rearrange the order in the respective array
 
     if (source.droppableId === 'notapplied') {
-      console.log('source was notapplied');
       nAJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (String(job._id) === result.draggableId) {
@@ -238,7 +233,6 @@ function App() {
         }
       });
     } else if (source.droppableId === 'inprogress') {
-      console.log('source was inprogress');
       iPJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (String(job._id) === result.draggableId) {
@@ -247,7 +241,6 @@ function App() {
         }
       });
     } else if (source.droppableId === 'result') {
-      console.log('source was result');
       resultJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (String(job._id) === result.draggableId) {
@@ -256,7 +249,6 @@ function App() {
         }
       });
     } else if (source.droppableId === 'ghosted') {
-      console.log('source was ghosted');
       ghostedJobs.forEach((job) => {
         // find the id of the thing being dragged
         if (String(job._id) === result.draggableId) {
@@ -266,14 +258,6 @@ function App() {
       });
     }
   };
-  // Auth should go here
-  // const loggedIn = window.localStorage.getItem("ssid");
-  // console.log(loggedIn);
-
-  // if (loggedIn == "guest") {
-  //   // Redirect to the login page or show an access denied message
-  //   return <Navigate to="/login" replace />;
-  // }
 
   return (
     <Grid
