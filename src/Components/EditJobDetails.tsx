@@ -27,63 +27,30 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { JobData } from '../Types';
 import CreateReminder from './CreateReminder';
+import updateDB from '../HelperFunctions/apiCalls';
 
 function EditJobDetails({
   isOpen, onClose, setJobs, job,
 } : UseDisclosureProps &
 { isOpen: boolean, onClose: () => void, setJobs: React.Dispatch<React.SetStateAction<JobData[]>>, job: JobData }) {
   // Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
-  const [jobFormData, setJobFormData] = useState({
-    company_name: '',
-    position: '',
-    listing_link: '',
-    notes: '',
-    last_updated: new Date().toISOString(),
-  });
+  const [jobFormData, setJobFormData] = useState(job);
 
-  const handleChange = (e) => {
-    console.log(e.target);
-    // const { name, value } = e.target;
-    // setJobData({...job, [name]: value });
-    // console.log(jobData)
-  };
+  // last_updated: new Date().toISOString(),
 
-  const handleStatusChange = async (e) => {
-    // console.log(e);
-    await setStatus(e.target.value);
-    // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
-    // post status to job
-    // try {
-    //   await fetch('/api', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ status }),
-    //     headers: { 'Content-Type': 'application/json' },
-    //   })
-    //     .then((res) => res.json())
-    //     .then(() => console.log('posted status to job'));
-    // } catch {
-    //   console.log('job status post unsuccessful');
-    // }
+  const handleChange = (event: React.ChangeEvent & { target: { name: string, value: string } }) => {
+    const { name, value } = event.target;
+    setJobFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // useEffect(() => {
-  //   console.log(status); // Log the updated reminder immediately after it changes
-  // }, [jobData, status]);
+  //   console.log(jobFormData);
+  // }, [jobFormData]);
 
   // Patch
-  const handleSave = async () => {
+  const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
-    try {
-      await fetch('/api', {
-        method: 'PATCH',
-        body: JSON.stringify({ jobFormData }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('edited job!'));
-    } catch {
-      console.log('edit job unsuccessful');
-    }
+    updateDB(setJobs, jobFormData);
   };
 
   return (
@@ -177,10 +144,10 @@ function EditJobDetails({
             <Box className="jobStatus">
               <Select
                 name="status"
-                onChange={handleStatusChange}
+                onChange={handleChange}
                 bg="color"
                 pl="2"
-                value={job.status}
+                value={jobFormData.status}
                 placeholder="Select A Status"
               >
                 <option value="Not Applied">Not Applied</option>
@@ -192,7 +159,7 @@ function EditJobDetails({
               </Select>
             </Box>
             <Button
-              onClick={handleSave}
+              onClick={handleSubmit}
               colorScheme="orange"
               // backgroundColor="#cf9c82"
               // variant="ghost"

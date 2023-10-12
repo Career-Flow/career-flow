@@ -13,52 +13,22 @@ import { Draggable } from '@hello-pangea/dnd';
 import EditJobDetails from './EditJobDetails';
 import { JobData } from '../Types';
 import statuses from '../Statuses';
-
-type JobCondition = 'notApplied' | 'inProgress' | 'done';
+import updateDB from '../HelperFunctions/apiCalls';
 
 function JobContainer({ job, index, setJobs }:
 { job: JobData, index: number, setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
-  console.log('jobcontainer job', job);
   const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
-  // renders based off condition: not applied, inprogress, done
-  const [jobCondition, setJobCondition] = useState<JobCondition>('inProgress');
-  const [status, setStatus] = useState('Not Applied');
+  const [status, setStatus] = useState(null);
 
   const handleStatusChange = async (e) => {
-    console.log(e.target.value);
-    await setStatus(e.target.value);
+    setStatus(e.target.value);
   };
 
   useEffect(() => {
-    const updateDB = async () => {
-      try {
-        const response = await fetch('/api', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...job, last_updated: new Date().toISOString(), status }),
-        });
-        // pass new job object to back
-
-        const data = await response.json();
-        setJobs((prev) => prev.map((ele) => {
-          if (ele._id === job._id) {
-            return data;
-          }
-          return ele;
-        }));
-        console.log(data, 'updateDB successful-----------');
-        // can we get the full job list then set the state? or somehow find the job in the state then change it
-      } catch (err) {
-        console.log(`updateDB unsuccessful ${err}`);
-      }
-    };
-
-    if (status !== 'Not Applied') {
+    if (status !== null) {
       console.log('changed status', { ...job, status });
-      updateDB();
+      updateDB(setJobs, job, status);
     }
   }, [status]);
   // eslint-disable-next-line max-len
