@@ -31,7 +31,6 @@ function Login() {
   const handleShowClick = () => setShowPassword(!showPassword);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('email', email, password);
 
     try {
       const response = await fetch('/auth/login', {
@@ -44,8 +43,7 @@ function Login() {
 
       // Check for success
       if (response.ok) {
-        const data = await response.json();
-        console.log('Account signed in', data);
+        // const data = await response.json();
         // window.location.href = '/';
         navigate('/', { replace: true });
       } else {

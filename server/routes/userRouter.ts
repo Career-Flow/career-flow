@@ -5,7 +5,7 @@ import cookieController from '../controllers/cookieController.ts';
 
 const userRouter = express.Router();
 
-// signup - POST '/'
+// signup - POST
 userRouter.post(
   '/signup',
   userController.createUser,
@@ -13,7 +13,7 @@ userRouter.post(
   (_, res: Response) => res.status(201).json(res.locals.user),
 );
 
-// router.post('/login')
+// login - POST
 userRouter.post(
   '/login',
   userController.verifyUser,
@@ -21,11 +21,16 @@ userRouter.post(
   (_, res: Response) => res.status(200).json(res.locals.user),
 );
 
+// logout - POST
+userRouter.post(
+  '/logout',
+  cookieController.deleteSSIDCookie,
+  (_, res: Response) => res.status(200).json(res.locals.deleted),
+);
+
 userRouter.get(
   '/',
   (_, res: Response) => res.status(200).json('TEST'),
 );
-// cookie parser
-// bycrypt? jwt?
 
 export default userRouter;
