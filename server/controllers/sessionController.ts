@@ -38,7 +38,7 @@ const sessionController = {
       const decoded = jwt.verify(token, process.env.TOKEN_KEY) as JwtPayload;
       // grabbing the _id thats also stored in the jwt
       res.locals.userId = decoded.id;
-      console.log('in sessioncontroller id', res.locals.userId);
+      console.log('in sessioncontroller userid', res.locals.userId);
       return next();
     } catch (err) {
       // if jwt.verify fails, the catch triggers

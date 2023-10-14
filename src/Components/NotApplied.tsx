@@ -37,12 +37,13 @@ function NotApplied({ jobs, setNAJobs, setJobs }:
           p="2"
  
           ref={provided.innerRef}
+          overflowY="auto"
           {...provided.droppableProps}
         >
           <Text fontWeight="700" color="#9C4221" textAlign="center" mb={2}>
             👋 Not Applied
           </Text>
-          <Container overflowY="auto" px="1">
+          <Container px="1">
 
             {jobList}
             {provided.placeholder}

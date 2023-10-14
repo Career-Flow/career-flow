@@ -35,6 +35,7 @@ function Done({ resultJobs, ghostedJobs, setJobs }: { resultJobs: JobData[], gho
       boxShadow="lg"
       borderWidth="1px"
       borderColor="#c0b0a9"
+      overflowY="auto"
       p="2"
     >
       <Text fontWeight="700" color="#9C4221" textAlign="center" mb={2}>
@@ -48,7 +49,7 @@ function Done({ resultJobs, ghostedJobs, setJobs }: { resultJobs: JobData[], gho
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{
-                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '55%', overflowY: 'auto', overflowX: 'hidden',
+                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', height: '55%', overflowX: 'hidden',
               }}
               px="1"
             >
@@ -66,7 +67,7 @@ function Done({ resultJobs, ghostedJobs, setJobs }: { resultJobs: JobData[], gho
               ref={provided.innerRef}
               {...provided.droppableProps}
               style={{
-                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', overflowY: 'auto', overflowX: 'hidden',
+                backgroundColor: snapshot.isDraggingOver ? 'white' : '#ededed', overflowX: 'hidden',
               }}
               h="30%"
               px="1"
