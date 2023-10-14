@@ -28,6 +28,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { JobData } from '../Types';
 import CreateReminder from './CreateReminder';
 import updateDB from '../HelperFunctions/apiCalls';
+import formCheck from '../HelperFunctions/formCheck';
 
 function EditJobDetails({
   isOpen, onClose, setJobs, job,
@@ -35,6 +36,12 @@ function EditJobDetails({
 { isOpen: boolean, onClose: () => void, setJobs: React.Dispatch<React.SetStateAction<JobData[]>>, job: JobData }) {
   // Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
   const [jobFormData, setJobFormData] = useState(job);
+  const [jobFormError, setJobFormError] = useState({
+    company_name: false,
+    position: false,
+    listing_link: false,
+    notes: false,
+  });
 
   // last_updated: new Date().toISOString(),
 
@@ -50,6 +57,7 @@ function EditJobDetails({
   // Patch
   const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
+    // formCheck(jobFormData, setJobFormError);
     updateDB(setJobs, jobFormData);
   };
 

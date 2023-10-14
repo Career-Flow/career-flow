@@ -13,3 +13,18 @@ export interface JobData {
   //   reminderType: string
   // }[]
 }
+
+export interface JobFormData {
+  company_name: string,
+  position: string,
+  listing_link: string,
+  notes: string,
+}
+
+export interface JobFormError {
+  company_name: boolean,
+  position: boolean,
+  listing_link: boolean,
+  notes: boolean,
+}
+

@@ -17,8 +17,10 @@ import {
   FormLabel,
   FormHelperText,
   UseDisclosureProps,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { JobData } from '../Types';
+import formCheck from '../HelperFunctions/formCheck';
 
 function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
 { isOpen: boolean, onClose: () => void, setNAJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
@@ -27,13 +29,22 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
     position: '',
     listing_link: '',
     notes: '',
-    applied_date: new Date().toISOString(),
+    // applied_date: '', date will be set on backend
+  });
+  const [jobFormError, setJobFormError] = useState({
+    company_name: false,
+    position: false,
+    listing_link: false,
+    notes: false,
   });
 
   // didn't put in useEffect because I only want to POST when we click Submit -> NOT every change
   const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
+    if (formCheck(jobFormData, setJobFormError)) { return; }
+
     try {
+      console.log({ ...jobFormData, applied_date: new Date().toISOString() });
       await fetch('/api', {
         method: 'POST',
         body: JSON.stringify({ jobFormData }),
@@ -42,6 +53,12 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
         .then((res) => res.json())
         .then((data: JobData) => {
           setNAJobs((prev) => [...prev, data]);
+          setJobFormData({
+            company_name: '',
+            position: '',
+            listing_link: '',
+            notes: '',
+          });
           onClose();// closes modal
           console.log('successfully posted job!', data);
         });
@@ -66,7 +83,7 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
           <ModalCloseButton />
           <ModalBody>
             <Box className="addJobContent">
-              <FormControl>
+              <FormControl isInvalid={jobFormError.company_name}>
                 <FormLabel>Company Name</FormLabel>
                 <Input
                   name="company_name"
@@ -74,6 +91,9 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
                   onChange={handleChange}
                   type="text"
                 />
+                <FormErrorMessage>Company Name is required.</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={jobFormError.position}>
                 <FormLabel>Position</FormLabel>
                 <Input
                   name="position"
@@ -81,6 +101,9 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
                   onChange={handleChange}
                   type="text"
                 />
+                <FormErrorMessage>Position is required.</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={jobFormError.listing_link}>
                 <FormLabel>Link to Job Posting</FormLabel>
                 <Input
                   name="listing_link"
@@ -88,6 +111,9 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
                   onChange={handleChange}
                   type="url"
                 />
+                <FormErrorMessage>Listing Link is required.</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={jobFormError.notes}>
                 <FormLabel>Notes</FormLabel>
                 <Textarea
                   name="notes"

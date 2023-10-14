@@ -11,8 +11,10 @@ const applicationController = {
   ) {
     try {
       const {
-        company_name, position, listing_link, notes, applied_date,
+        company_name, position, listing_link, notes,
       } = req.body.jobFormData;
+      const applied_date = new Date().toISOString();
+      console.log(req.body.jobFormData.applied_date);
       const { userId } = res.locals;
       const data = [
         userId, // passed in from sessionController jwt
