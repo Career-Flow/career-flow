@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable no-underscore-dangle */
+import { useEffect, useState } from 'react';
 import '../App.css';
 import {
   Box,
@@ -6,40 +7,44 @@ import {
   Flex,
   useDisclosure,
   UseDisclosureReturn,
+  Text,
 } from '@chakra-ui/react';
 import { Draggable } from '@hello-pangea/dnd';
 import EditJobDetails from './EditJobDetails';
 import { JobData } from '../Types';
 import statuses from '../Statuses';
+import updateDB from '../HelperFunctions/apiCalls';
 
-type JobCondition = 'notApplied' | 'inProgress' | 'done';
-
-function JobContainer({ job, index }: { job: JobData, index: number }) {
-  console.log('jobcontainer job.status', job.status);
+function JobContainer({ job, index, setJobs }:
+{ job: JobData, index: number, setJobs: React.Dispatch<React.SetStateAction<JobData[]>> }) {
   const { isOpen, onOpen, onClose } : UseDisclosureReturn = useDisclosure();
   // const innerRef = useRef(null);
-  // renders based off condition: not applied, inprogress, done
-  const [jobCondition, setJobCondition] = useState<JobCondition>('inProgress');
-  const [status, setStatus] = useState('Applied');
+  const [status, setStatus] = useState(null);
 
   const handleStatusChange = async (e) => {
-    console.log(e.target.value);
-    await setStatus(e.target.value);
-    // eslint-disable-next-line max-len
-    // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
-    // post status to job
-    try {
-      await fetch('/api', {
-        method: 'POST',
-        body: JSON.stringify({ status }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('posted status to job'));
-    } catch {
-      console.log('job status post unsuccessful');
-    }
+    setStatus(e.target.value);
   };
+
+  useEffect(() => {
+    if (status !== null) {
+      console.log('changed status', { ...job, status });
+      updateDB(setJobs, job, status);
+    }
+  }, [status]);
+  // eslint-disable-next-line max-len
+  // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
+  // post status to job
+  // try {
+  //   await fetch('/api', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ status }),
+  //     headers: { 'Content-Type': 'application/json' },
+  //   })
+  //     .then((res) => res.json())
+  //     .then(() => console.log('posted status to job'));
+  // } catch {
+  //   console.log('job status post unsuccessful');
+  // }
 
   const handleDoubleClicked = (event) => {
     if (event.detail === 2) {
@@ -50,23 +55,23 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
   // if inprogress: name of company, role, dropdown (state), date of last updated
   // done: name of company, role, accepted/rejected/ghosted - emoji
   return (
-    <Draggable draggableId={job.app_id} index={index}>
+    <Draggable draggableId={String(job._id)} index={index}>
       {(provided, snapshot) => (
         <>
           <Box
-            bg={snapshot.isDragging ? '#ffc5a9' : 'white'}
+            bg={snapshot.isDragging ? '#ffc5a9' : '#faf9f6'}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             onDoubleClick={handleDoubleClicked}
             borderRadius="md"
             p="2.5"
-            boxShadow="sm"
+            boxShadow="md"
           >
             {statuses[job.status] === 'notapplied' && (
             <Box>
-              <p>Company: ReactType</p>
-              <p>Role: Software Engineer</p>
+              <p>{`Company Name: ${job.company_name}`}</p>
+              <p>{`Role: ${job.position}`}</p>
             </Box>
             )}
             {statuses[job.status] === 'inprogress' && (
@@ -77,10 +82,10 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
-                <p className="displayDate">09/12/23</p>
+                <p>{`Role: ${job.position}`}</p>
+                <p className="displayDate">{`${new Date(job.applied_date).toDateString()}`}</p>
               </div>
               <div className="jobFooterContainer">
                 <div className="jobMenu">
@@ -89,13 +94,15 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
                     onChange={handleStatusChange}
                     bg="color"
                     pl="2"
-                    placeholder="Status"
+                    value={job.status}
+                    placeholder="Select A Status"
                   >
+                    <option value="Not Applied">Not Applied</option>
                     <option value="Applied">Applied</option>
                     <option value="Interviewing">Interviewing</option>
                     <option value="Waiting">Waiting</option>
-                    <option value="Waiting">Accepted</option>
-                    <option value="Waiting">Rejected</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Rejected">Rejected</option>
                   </Select>
                 </div>
               </div>
@@ -109,16 +116,22 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
+                <p>{`Role: ${job.position}`}</p>
               </div>
-              {/* <Text color="#65c268" alignSelf="center">
+              {
+                job.status === 'Accepted' ? (
+                  <Text color="#65c268" alignSelf="center">
                     ACCEPTED!
-                  </Text> */}
-              {/* <Text color="#c27465" alignSelf="center">
-                REJECTED
-              </Text> */}
+                  </Text>
+                ) : (
+                  <Text color="#c27465" alignSelf="center">
+                    REJECTED
+                  </Text>
+                )
+
+              }
             </Box>
             )}
             {statuses[job.status] === 'ghosted' && (
@@ -126,12 +139,13 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
               display="flex"
               flexDirection="row"
               justifyContent="space-between"
+              opacity="60%"
             >
               <div className="jobInfo">
                 <Flex justifyContent="space-between">
-                  <p>Company: ReactType</p>
+                  <p>{`Company Name: ${job.company_name}`}</p>
                 </Flex>
-                <p>Role: Software Engineer</p>
+                <p>{`Role: ${job.position}`}</p>
               </div>
               {/* <Text color="#65c268" alignSelf="center">
                     ACCEPTED!
@@ -143,7 +157,7 @@ function JobContainer({ job, index }: { job: JobData, index: number }) {
             )}
 
           </Box>
-          <EditJobDetails isOpen={isOpen} onClose={onClose} />
+          <EditJobDetails isOpen={isOpen} onClose={onClose} setJobs={setJobs} job={job} />
         </>
       )}
     </Draggable>

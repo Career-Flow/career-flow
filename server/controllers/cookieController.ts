@@ -52,12 +52,14 @@ const cookieController = {
   },
   // delete cookie
   async deleteSSIDCookie(
-    _: Request,
+    req: Request,
     res: Response,
     next: NextFunction,
   ) {
     try {
+      const cookieSSID = req.cookies.ssid;
       res.clearCookie('ssid');
+      res.locals.deleted = cookieSSID;
       return next();
     } catch {
       return next({

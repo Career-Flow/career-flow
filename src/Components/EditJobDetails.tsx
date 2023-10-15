@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,78 +11,49 @@ import {
   Button,
   Text,
   Flex,
-  Input,
   Select,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
   UseDisclosureProps,
   Box,
   Editable,
   EditableInput,
   EditablePreview,
   EditableTextarea,
+  Link,
 } from '@chakra-ui/react';
+import { JobData } from '../Types';
+import updateDB from '../HelperFunctions/apiCalls';
+import EditableControls from '../HelperFunctions/editableFuncs';
+import formCheck from '../HelperFunctions/formCheck';
 
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import CreateReminder from './CreateReminder';
 
-function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
-{ isOpen: boolean, onClose: () => void }) {
+function EditJobDetails({
+  isOpen, onClose, setJobs, job,
+} : UseDisclosureProps &
+{ isOpen: boolean, onClose: () => void, setJobs: React.Dispatch<React.SetStateAction<JobData[]>>, job: JobData }) {
   // Note: Need to add logic where we fetch the current job's existing info, set that as the initial state of jobData
-
-  const [jobData, setJobData] = useState({
-    company_name: '',
-    position: '',
-    listing_link: '',
-    notes: '',
+  const [jobFormData, setJobFormData] = useState(job);
+  const [jobFormError, setJobFormError] = useState({
+    company_name: false,
+    position: false,
+    listing_link: false,
+    notes: false,
   });
-  const [status, setStatus] = useState('Done');
+  // last_updated: new Date().toISOString(),
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setJobData({ ...jobData, [name]: value });
-    // console.log(jobData)
+  const handleChange = (event: React.ChangeEvent & { target: { name: string, value: string } }) => {
+    const { name, value } = event.target;
+    setJobFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleStatusChange = async (e) => {
-    // console.log(e);
-    await setStatus(e.target.value);
-    // newStatus will equal status string (d/t Chakra constraints -> need to update status on change)
-    // post status to job
-    try {
-      await fetch('/api', {
-        method: 'POST',
-        body: JSON.stringify({ status }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('posted status to job'));
-    } catch {
-      console.log('job status post unsuccessful');
-    }
-  };
-
-  useEffect(() => {
-    console.log(status); // Log the updated reminder immediately after it changes
-  }, [jobData, status]);
+  // useEffect(() => {
+  //   console.log(jobFormData);
+  // }, [jobFormData]);
 
   // Patch
-  const handleSave = async () => {
+  const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
-    try {
-      await fetch('/api', {
-        method: 'PATCH',
-        body: JSON.stringify({ jobData }),
-        headers: { 'Content-Type': 'application/json' },
-      })
-        .then((res) => res.json())
-        .then(() => console.log('edited job!'));
-    } catch {
-      console.log('edit job unsuccessful');
-    }
+    // f (formCheck(jobFormData, setJobFormError)) { return; }
+    updateDB(setJobs, jobFormData);
   };
 
   return (
@@ -91,18 +63,19 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
         <ModalContent>
           <ModalHeader
             id="company_name"
-            as={Editable}
             color="#9C4221"
             alignSelf="center"
-            size="lg"
-            defaultValue="ReactType"
           >
-            <EditablePreview />
-            <EditableInput
-              name="company_name"
-              value={jobData.company_name}
-              onChange={handleChange}
-            />
+            <Editable defaultValue={job.company_name} isPreviewFocusable={false} alignItems="center" style={{ display: 'flex' }}>
+              <EditablePreview />
+              <EditableInput
+                name="company_name"
+                value={jobFormData.company_name}
+                onChange={handleChange}
+                textAlign="center"
+              />
+              <EditableControls />
+            </Editable>
           </ModalHeader>
           <Text textAlign="center" className="displayDate">
             09/12/23
@@ -110,15 +83,16 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
           <ModalCloseButton />
           <ModalBody>
             <Box className="addJobContent">
-              <Flex display="flex" alignItems="center">
+              <Flex display="flex" alignItems="center" my={1}>
                 <Text fontWeight="550">Position: </Text>
-                <Editable pl="3" defaultValue="Software Engineer">
+                <Editable pl="3" defaultValue={job.position} isPreviewFocusable={false} alignItems="center" style={{ display: 'flex' }}>
                   <EditablePreview />
                   <EditableInput
                     name="position"
-                    value={jobData.position}
+                    value={jobFormData.position}
                     onChange={handleChange}
                   />
+                  <EditableControls />
                 </Editable>
               </Flex>
               <Flex display="flex" alignItems="center">
@@ -126,18 +100,24 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                 <Editable
                   pl="3"
                   color="#ED8936"
-                  defaultValue="https://www.codesmith.io/"
+                  defaultValue={job.listing_link}
+                  isPreviewFocusable={false}
+                  alignItems="center"
+                  style={{ display: 'flex' }}
                 >
-                  <EditablePreview />
+                  <Link href={job.listing_link} isExternal>
+                    <EditablePreview />
+                  </Link>
                   <EditableInput
                     type="url"
                     name="listing_link"
-                    value={jobData.listing_link}
+                    value={jobFormData.listing_link}
                     onChange={handleChange}
                   />
+                  <EditableControls />
                 </Editable>
               </Flex>
-              <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
+              {/* <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
                 <Accordion allowToggle>
                   <AccordionItem>
                     <AccordionButton>
@@ -145,27 +125,35 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4}>
-                      <CreateReminder propData={jobData.company_name} />
+                      <CreateReminder propData={job.company_name} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
-              </Box>
+              </Box> */}
 
-              <Text fontWeight="550" textAlign="center">
-                Notes:
+              <Text mt={2} fontWeight="550">
+                Notes (Click Below to Edit):
                 {' '}
               </Text>
               <Box>
                 <Editable
                   pl="3"
-                  size="small"
-                  defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                  defaultValue={job.notes}
                 >
-                  <EditablePreview />
+                  <EditablePreview
+                    style={{
+                      whiteSpace: 'pre-line',
+                      width: '100%',
+                      // This CSS style ensures line breaks are respected
+                    }}
+                    overflowY="auto"
+                    h="3xs"
+                  />
                   <EditableTextarea
                     name="notes"
-                    value={jobData.notes}
+                    value={jobFormData.notes}
                     onChange={handleChange}
+                    h="3xs"
                   />
                 </Editable>
               </Box>
@@ -175,20 +163,22 @@ function EditJobDetails({ isOpen, onClose } : UseDisclosureProps &
             <Box className="jobStatus">
               <Select
                 name="status"
-                onChange={handleStatusChange}
+                onChange={handleChange}
                 bg="color"
                 pl="2"
-                placeholder="Status"
+                value={jobFormData.status}
+                placeholder="Select A Status"
               >
+                <option value="Not Applied">Not Applied</option>
                 <option value="Applied">Applied</option>
                 <option value="Interviewing">Interviewing</option>
                 <option value="Waiting">Waiting</option>
-                <option value="Waiting">Accepted</option>
-                <option value="Waiting">Rejected</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
               </Select>
             </Box>
             <Button
-              onClick={handleSave}
+              onClick={handleSubmit}
               colorScheme="orange"
               // backgroundColor="#cf9c82"
               // variant="ghost"

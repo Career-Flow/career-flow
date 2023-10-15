@@ -16,7 +16,21 @@ import { HamburgerIcon, BellIcon, InfoIcon } from '@chakra-ui/icons';
 
 function Navbar() {
   const navigate = useNavigate();
-  const handleLoginOut = () => {
+  const handleLogOut = async () => {
+    try {
+      const response = await fetch('/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      // pass new job object to back
+
+      const data = await response.json();
+      if (data) { console.log('Logged out Successfully!'); }
+    } catch (err) {
+      console.log(`updateDB unsuccessful ${err}`);
+    }
     navigate('/login');
   };
   return (
@@ -32,8 +46,8 @@ function Navbar() {
         <MenuItem icon={<InfoIcon />} command="⌘P">
           Profile
         </MenuItem>
-        <MenuItem icon={<BellIcon />} command="⌘L" onClick={handleLoginOut}>
-          Login
+        <MenuItem icon={<BellIcon />} command="⌘L" onClick={handleLogOut}>
+          Logout
         </MenuItem>
       </MenuList>
     </Menu>
