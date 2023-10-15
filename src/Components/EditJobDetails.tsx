@@ -66,7 +66,7 @@ function EditJobDetails({
             color="#9C4221"
             alignSelf="center"
           >
-            <Editable defaultValue={job.company_name} isPreviewFocusable={false} style={{ display: 'flex' }}>
+            <Editable defaultValue={job.company_name} isPreviewFocusable={false} alignItems="center" style={{ display: 'flex' }}>
               <EditablePreview />
               <EditableInput
                 name="company_name"
@@ -83,9 +83,9 @@ function EditJobDetails({
           <ModalCloseButton />
           <ModalBody>
             <Box className="addJobContent">
-              <Flex display="flex" alignItems="center">
+              <Flex display="flex" alignItems="center" my={1}>
                 <Text fontWeight="550">Position: </Text>
-                <Editable pl="3" defaultValue={job.position} isPreviewFocusable={false} style={{ display: 'flex' }}>
+                <Editable pl="3" defaultValue={job.position} isPreviewFocusable={false} alignItems="center" style={{ display: 'flex' }}>
                   <EditablePreview />
                   <EditableInput
                     name="position"
@@ -102,6 +102,7 @@ function EditJobDetails({
                   color="#ED8936"
                   defaultValue={job.listing_link}
                   isPreviewFocusable={false}
+                  alignItems="center"
                   style={{ display: 'flex' }}
                 >
                   <Link href={job.listing_link} isExternal>

@@ -14,8 +14,8 @@ function EditableControls() {
 
   return isEditing ? (
     <ButtonGroup ml={2}>
-      <IconButton icon={<CheckIcon />} aria-label="Submit" {...getSubmitButtonProps()} />
-      <IconButton icon={<CloseIcon />} aria-label="Cancel" {...getCancelButtonProps()} />
+      <IconButton size="sm" icon={<CheckIcon />} aria-label="Submit" {...getSubmitButtonProps()} />
+      <IconButton size="sm" icon={<CloseIcon />} aria-label="Cancel" {...getCancelButtonProps()} />
     </ButtonGroup>
   ) : (
     <Flex ml={2}>
