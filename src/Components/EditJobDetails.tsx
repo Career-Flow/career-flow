@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -10,25 +11,20 @@ import {
   Button,
   Text,
   Flex,
-  Input,
   Select,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
   UseDisclosureProps,
   Box,
   Editable,
   EditableInput,
   EditablePreview,
   EditableTextarea,
+  Link,
 } from '@chakra-ui/react';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import { JobData } from '../Types';
-import CreateReminder from './CreateReminder';
 import updateDB from '../HelperFunctions/apiCalls';
+import EditableControls from '../HelperFunctions/editableFuncs';
 import formCheck from '../HelperFunctions/formCheck';
+
 
 function EditJobDetails({
   isOpen, onClose, setJobs, job,
@@ -42,7 +38,6 @@ function EditJobDetails({
     listing_link: false,
     notes: false,
   });
-
   // last_updated: new Date().toISOString(),
 
   const handleChange = (event: React.ChangeEvent & { target: { name: string, value: string } }) => {
@@ -57,7 +52,7 @@ function EditJobDetails({
   // Patch
   const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
-    // formCheck(jobFormData, setJobFormError);
+    // f (formCheck(jobFormData, setJobFormError)) { return; }
     updateDB(setJobs, jobFormData);
   };
 
@@ -68,18 +63,19 @@ function EditJobDetails({
         <ModalContent>
           <ModalHeader
             id="company_name"
-            as={Editable}
             color="#9C4221"
             alignSelf="center"
-            size="lg"
-            defaultValue={job.company_name}
           >
-            <EditablePreview />
-            <EditableInput
-              name="company_name"
-              value={jobFormData.company_name}
-              onChange={handleChange}
-            />
+            <Editable defaultValue={job.company_name} isPreviewFocusable={false} style={{ display: 'flex' }}>
+              <EditablePreview />
+              <EditableInput
+                name="company_name"
+                value={jobFormData.company_name}
+                onChange={handleChange}
+                textAlign="center"
+              />
+              <EditableControls />
+            </Editable>
           </ModalHeader>
           <Text textAlign="center" className="displayDate">
             09/12/23
@@ -89,13 +85,14 @@ function EditJobDetails({
             <Box className="addJobContent">
               <Flex display="flex" alignItems="center">
                 <Text fontWeight="550">Position: </Text>
-                <Editable pl="3" defaultValue={job.position}>
+                <Editable pl="3" defaultValue={job.position} isPreviewFocusable={false} style={{ display: 'flex' }}>
                   <EditablePreview />
                   <EditableInput
                     name="position"
                     value={jobFormData.position}
                     onChange={handleChange}
                   />
+                  <EditableControls />
                 </Editable>
               </Flex>
               <Flex display="flex" alignItems="center">
@@ -104,14 +101,19 @@ function EditJobDetails({
                   pl="3"
                   color="#ED8936"
                   defaultValue={job.listing_link}
+                  isPreviewFocusable={false}
+                  style={{ display: 'flex' }}
                 >
-                  <EditablePreview />
+                  <Link href={job.listing_link} isExternal>
+                    <EditablePreview />
+                  </Link>
                   <EditableInput
                     type="url"
                     name="listing_link"
                     value={jobFormData.listing_link}
                     onChange={handleChange}
                   />
+                  <EditableControls />
                 </Editable>
               </Flex>
               {/* <Box bg="#ede5e1" p="2" borderRadius="md" className="reminders">
@@ -128,21 +130,29 @@ function EditJobDetails({
                 </Accordion>
               </Box> */}
 
-              <Text fontWeight="550" textAlign="center">
-                Notes:
+              <Text mt={2} fontWeight="550">
+                Notes (Click Below to Edit):
                 {' '}
               </Text>
               <Box>
                 <Editable
                   pl="3"
-                  size="small"
                   defaultValue={job.notes}
                 >
-                  <EditablePreview />
+                  <EditablePreview
+                    style={{
+                      whiteSpace: 'pre-line',
+                      width: '100%',
+                      // This CSS style ensures line breaks are respected
+                    }}
+                    overflowY="auto"
+                    h="3xs"
+                  />
                   <EditableTextarea
                     name="notes"
                     value={jobFormData.notes}
                     onChange={handleChange}
+                    h="3xs"
                   />
                 </Editable>
               </Box>

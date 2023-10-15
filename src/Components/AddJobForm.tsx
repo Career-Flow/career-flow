@@ -111,7 +111,7 @@ function AddJobForm({ isOpen, onClose, setNAJobs } : UseDisclosureProps &
                   onChange={handleChange}
                   type="url"
                 />
-                <FormErrorMessage>Listing Link is required.</FormErrorMessage>
+                <FormErrorMessage>Listing Link is required and must start with &quot;http://&quot; or &quot;https://&quot; .</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={jobFormError.notes}>
                 <FormLabel>Notes</FormLabel>

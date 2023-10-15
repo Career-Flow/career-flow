@@ -1,0 +1,28 @@
+/* eslint-disable react/jsx-props-no-spreading */
+import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import {
+  Button,
+  ButtonGroup, Flex, IconButton, useEditableControls,
+} from '@chakra-ui/react';
+
+function EditableControls() {
+  const {
+    isEditing,
+    getSubmitButtonProps,
+    getCancelButtonProps,
+    getEditButtonProps,
+  } = useEditableControls();
+
+  return isEditing ? (
+    <ButtonGroup ml={2}>
+      <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
+      <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+    </ButtonGroup>
+  ) : (
+    <Flex ml={2}>
+      <IconButton size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
+    </Flex>
+  );
+}
+
+export default EditableControls;

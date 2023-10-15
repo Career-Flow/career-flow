@@ -2,6 +2,7 @@ import { JobFormData, JobFormError } from '../Types';
 
 const formCheck = (jobFormData: JobFormData, setJobFormError: React.Dispatch<React.SetStateAction<JobFormError>>) => {
   let shouldReturn = false;
+  const lowerListingLink = jobFormData.listing_link.toLowerCase();
   if (jobFormData.company_name.length === 0) {
     setJobFormError((prev) => ({ ...prev, company_name: true }));
     shouldReturn = true;
@@ -14,7 +15,7 @@ const formCheck = (jobFormData: JobFormData, setJobFormError: React.Dispatch<Rea
   } else {
     setJobFormError((prev) => ({ ...prev, position: false }));
   }
-  if (jobFormData.listing_link.length === 0) {
+  if (jobFormData.listing_link.length === 0 || (!lowerListingLink.startsWith('http://') && !lowerListingLink.startsWith('https://'))) {
     setJobFormError((prev) => ({ ...prev, listing_link: true }));
     shouldReturn = true;
   } else {
